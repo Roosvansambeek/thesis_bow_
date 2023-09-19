@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tilburg University Course Catalogue</title>
+    {% include 'bootstrap.html' %}
+  </head>
+  <body>
+  {% include 'navbar.html' %}
+    <div>
+      <h2>{{ course['course_name'] }}</h2>
+    </div>
+  {% include 'footer.html' %}
+  </body>
+</html>
