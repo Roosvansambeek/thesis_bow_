@@ -3,11 +3,16 @@ from database import load_courses_from_db, load_course_from_db
 
 app = Flask(__name__)
 
+filters = {
+    'Degree': ['Bachelor', 'Master', 'Pre-master'],
+    'Block': [1, 2, 3, 4]
+}
+
 @app.route("/")
 def hello_world():
-  courses = load_courses_from_db()
-  return render_template('home.html',
-                        courses=courses)
+    courses = load_courses_from_db()
+    return render_template('home.html', courses=courses, filters=filters)
+
 
 @app.route("/api/courses")
 def list_courses():

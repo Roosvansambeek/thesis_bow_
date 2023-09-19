@@ -1,9 +1,36 @@
-<nav class="navbar shadow-sm fixed-top bg-white">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="/static/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-      Course Catalogue
-    </a>
-  </div>
-</nav>
-<div style="height:56px"></div>
+<header>
+  <style>
+    nav {
+      background-color: #006094;
+    }
+
+    .custom-text {
+      color: white;
+    }
+
+    .bi-house-door {
+      color: white;
+    }
+  </style>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md fixed-top">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <i class="bi-house-door"></i>
+            <a class="custom-text" aria-current="page" href="/">Home</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<div style="height:50px"></div>

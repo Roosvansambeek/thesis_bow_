@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Tilburg University Course Catalogue</title>
-    {% include 'bootstrap.html' %}
-  </head>
-  <body>
+<head>
+  <style>
+    body {
+      margin: 50px;
+    }
+    
+    .container {
+      margin: 50px;
+    }
+  </style>
+  <title>Tilburg University Course Catalogue</title>
+  {% include 'bootstrap.html' %}
+</head>
+<body>
   {% include 'navbar.html' %}
-    <div>
-      <h2>{{ course['course_name'] }}</h2>
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col">
+        <h2>{{ course['course_name'] }}</h2>
+      </div>
     </div>
-  {% include 'footer.html' %}
-  </body>
+    
+    {% include 'footer.html' %}
+  </div>
+</body>
 </html>

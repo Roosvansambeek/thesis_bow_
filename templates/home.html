@@ -5,83 +5,56 @@
   {% include 'bootstrap.html' %}
   <style>
     body {
-      margin-bottom: 50px;
+      margin: 50px;
     }
     
     .card-with-margin {
       margin-right: 20px;
     }
-
-    header {
-      margin-top: 50px;
-    }
-
+    
     a {
-    text-decoration: none;
+      text-decoration: none;
     }
 
     .course-details {
-    margin-bottom: 0.3em;
+      margin-bottom: 0.3em;
+    }
+
+    .custom-button {
+      background-color: #006094;
+      color: white;
     }
   </style>
 </head>
 <body>
   {% include 'navbar.html' %}
-<div class="container">
-  <header>
+  <div class="container">
+    {% include 'banner.html' %}
+    <!-- Filter part -->
     <div class="row">
       <div class="col-2">
-        <img class="img-fluid" id="TiU_logo" src="https://thesismarecsys--kleinjonasuvt.repl.co/static/TiU_logo.png">
-      </div>
-      <div class="col-8">
-        <h1>Tilburg University Course Catalogue</h1>
-      </div>
-    </div>
-  </header>
-  <hr>
-<!--Filter part-->
-  <div class="row">
-    <div class="col-2">
-      <aside>
-        <h5>Filters</h5>
-        <br>
-        <div class="dropdown" data-bs-theme="light">
-          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButtonLight" data-bs-toggle="dropdown" aria-expanded="false">
-            Degree
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight">
-            <li><a class="dropdown-item active" href="#">Bachelor</a></li>
-            <li><a class="dropdown-item" href="#">Master</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Pre-master</a></li>
-          </ul>
-        </div>
-      <br>
-        <div class="dropdown" data-bs-theme="light">
-          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButtonLight" data-bs-toggle="dropdown" aria-expanded="false">
-            Block
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight">
-            <li><a class="dropdown-item active" href="#">Block 1</a></li>
-            <li><a class="dropdown-item" href="#">Block 2</a></li>
-            <li><a class="dropdown-item" href="#">Block 3</a></li>
-            <li><a class="dropdown-item" href="#">Block 4</a></li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-<!--Courses part-->
-    <div class="col-10">
-      <main>
-        <h2>Courses</h2>
-        <div>
-          {% for course in courses %}
-            {% include 'courseitem.html' %}
+        <aside>
+          <h5>Filters</h5>
+          <br>
+          {% for key in filters.keys() %}
+            {% include 'filter.html' %}
           {% endfor %}
-        </div>
-<!--Recommended part-->
-        <div class="row">
-          <h2>Recommended courses</h2>
+        </aside>
+      </div>
+      
+      <!-- Courses part -->
+      <div class="col-10">
+        <main>
+          <h2>Courses</h2>
+          <div>
+            {% for course in courses %}
+              {% include 'courseitem.html' %}
+            {% endfor %}
+          </div>
+          
+          <!-- Recommended part -->
+          <div class="row mt-4">
+            <h2>Recommended courses</h2>
             <div class="col px-0">
               <div class="card card-with-margin">
                 <div class="card-body">
@@ -106,11 +79,12 @@
                 </div>
               </div>
             </div>
-        </div>
-      </main>
+          </div>
+        </main>
+      </div>
     </div>
   </div>
-</div>
+  
   {% include 'footer.html' %}
 </body>
 </html>
