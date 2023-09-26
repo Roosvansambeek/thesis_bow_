@@ -11,7 +11,11 @@ filters = {
 @app.route("/")
 def hello_world():
     courses = load_courses_from_db()
-    return render_template('home.html', courses=courses, filters=filters)
+    return render_template('courses.html', courses=courses, filters=filters)
+
+@app.route("/home")
+def home():
+    return render_template('home.html')
 
 @app.route("/welcome")
 def welcome():
