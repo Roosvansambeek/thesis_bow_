@@ -13,6 +13,10 @@ def hello_world():
     courses = load_courses_from_db()
     return render_template('home.html', courses=courses, filters=filters)
 
+@app.route("/inlogpage")
+def load_inlogpage():
+    return render_template('inlogpage.html')
+
 
 @app.route("/api/courses")
 def list_courses():
