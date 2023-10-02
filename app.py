@@ -28,5 +28,10 @@ def show_course(course_code):
     return render_template('coursepage.html',
                         course=course)
 
+@app.route('/favorites')
+def favorite_courses():
+    return render_template('favorites.html')
+
+
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
