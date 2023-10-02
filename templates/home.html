@@ -1,90 +1,291 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Tilburg University Course Catalogue</title>
-  {% include 'bootstrap.html' %}
-  <style>
-    body {
-      margin: 50px;
-    }
-    
-    .card-with-margin {
-      margin-right: 20px;
-    }
-    
-    a {
-      text-decoration: none;
-    }
-
-    .course-details {
-      margin-bottom: 0.3em;
-    }
-
-    .custom-button {
-      background-color: #006094;
-      color: white;
-    }
-  </style>
+    <title>Home page</title>
+    {% include 'bootstrap.html' %}
 </head>
-<body>
-  {% include 'navbar.html' %}
-  <div class="container">
-    {% include 'banner.html' %}
-    <!-- Filter part -->
-    <div class="row">
-      <div class="col-2">
-        <aside>
-          <h5>Filters</h5>
-          <br>
-          {% for key in filters.keys() %}
-            {% include 'filter.html' %}
-          {% endfor %}
-        </aside>
-      </div>
-      
-      <!-- Courses part -->
-      <div class="col-10">
-        <main>
-          <h2>Courses</h2>
-          <div>
-            {% for course in courses %}
-              {% include 'courseitem.html' %}
-            {% endfor %}
-          </div>
-          
-          <!-- Recommended part -->
-          <div class="row mt-4">
-            <h2>Recommended courses</h2>
-            <div class="col px-0">
-              <div class="card card-with-margin">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col px-0">
-              <div class="card card-with-margin">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col px-0">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  </div>
+<style>
+  body {
+    margin-top: 5px;
+  }
+
+  .container {
+    margin-top: 50px;
+  }
+
+  .section {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .custom-crd {
+    background-color: #F2D398;
+    border: 2px solid #986B23;
+    color: black;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0;             /* ensure no margin */
+    height: 40px;          /* ensure height fits content */
+  }
+
+  .custom-crd .card-body {
+    padding: 0;            /* remove padding from the card body */
+    margin: 0;             /* ensure no margin */
+  }
+
+  .custom-crd {
+    transition: all 0.3s ease;
+  }
+        
+  .custom-crd:hover {
+    box-shadow:
+      -7px -7px 20px 0px #fff9,
+      -4px -4px 5px 0px #fff9,
+      7px 7px 20px 0px #0002,
+      4px 4px 5px 0px #0001;
+      font-weight: bold;
+  }
+
+  i {
+          font-size: 18px;
+          margin-left: 10px;
+        }
+
+ .carousel-control-prev, .carousel-control-next {
+    top: 50%;
+    display: inline-block;
+    background: none;  /* Remove default background */
+    transform: translateY(-50%);  /* Center it vertically */
+}
+
   
-  {% include 'footer.html' %}
+  .carousel-control-prev-icon, .carousel-control-next-icon {
+      display: none;  /* Hide default Bootstrap icons */
+  }
+  
+  .carousel-control-prev {
+      left: -4%;
+  }
+  
+  .carousel-control-next {
+      right: -4%;
+  }
+  
+  .fa-chevron-left, .fa-chevron-right {
+      font-size: 24px; /* Adjust size if necessary */
+  }
+
+  .carousel {
+    margin-top: 25px;
+  }
+
+  .carousel-card-body {
+    margin-left: 70px;
+    margin-right: 60px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+</style>
+<body>
+    {% include 'navbar.html' %}
+        <div class="container">
+            <div class="row">
+              <div id="carouselExampleCaptions" class="carousel slide col-12">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                      <div class="card">
+                        <div class="carousel-card-body">
+                            <h5 class="card-title"><b>Course example 1</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om l<card class=""></card>e content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card.</p>
+                            <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="carousel-item">
+                      <div class="card">
+                        <div class="carousel-card-body">
+                            <h5 class="card-title"><b>Course example 2</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om l<card class=""></card>e content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card.</p>
+                            <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="carousel-item">
+                      <div class="card">
+                        <div class="carousel-card-body">
+                            <h5 class="card-title"><b>Course example 3</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om l<card class=""></card>e content in de card. Ik ga nu gewoon even veel typen om de tekst een beetje aan te vullen en om te kijken hoe de carousel reageert om langere content in de card.</p>
+                            <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                    <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                    <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+              </div>
+            </div>
+          <div class="section">
+            <div class="row">
+              <h3><b>Best courses <span style="color: #ACBED8;">for you!</span></b></h3>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 4</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 5</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 6</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="row">
+              <h3><b><span style="color: #ACBED8;">Explore </span>more courses!</b></h3>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 7</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 8</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 9</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="row">
+              <h3><b><span style="color: #ACBED8;">Compulsory </span>courses!</b></h3>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 10</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 11</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Course example 12</b></h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                          <div class="card custom-crd">
+                              <div class="card-body">
+                                  <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
 </body>
+{% include 'footer.html' %}
 </html>
