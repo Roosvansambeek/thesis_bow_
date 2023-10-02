@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Favorite Courses</title>
+    {% include 'bootstrap.html' %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+      
+        .center-object {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           margin-block: 20px;
+        }
+
+        #TiU_logo {
+           margin-top: 20px;
+           margin-bottom: 20px;
+           width: 40%;
+           max-width: 100%;
+           height: auto;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allows the cards to wrap to the next line */
+            gap: 20px; /* space between columns */
+            padding: 20px 0; /* space around the row */
+        }
+
+        .column {
+            flex: 1; /* equally distribute space between columns */
+            max-width: 300px; /* limit the width of each column */
+            background-color: #f9f9f9; /* light background color for the card */
+            border: 1px solid #e0e0e0; /* subtle border */
+            border-radius: 8px; /* rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+            padding: 20px; /* space inside the card */
+        }
+
+        h3 {
+            border-bottom: 2px solid #333; /* underline for the headings */
+            padding-bottom: 10px; /* space below the underline */
+            margin-bottom: 15px; /* space below the heading */
+        }
+
+        ul {
+            list-style-type: disc; /* bullet points for the list */
+            margin-left: 20px; /* indent the list */
+        }
+
+        li strong {
+            color: #0073aa; /* color for the strong text */
+        }
+    </style>
+</head>
+<body>
+<div id="banner">
+    <div class="row center-object">
+        <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png" alt="TiU Logo">
+    </div>
+</div>
+
+<div class="container">
+    <!-- Four rows of cards, each row containing 4 cards -->
+    <!-- You can adjust the content inside each card as needed -->
+    {% for _ in range(4) %}
+    <div class="row">
+        {% for _ in range(4) %}
+        <div class="column">
+            <!-- Empty card content -->
+            <h3>Course Title</h3>
+            <ul>
+                <li><strong>Course Detail 1</strong></li>
+                <li><strong>Course Detail 2</strong></li>
+                <li><strong>Course Detail 3</strong></li>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
