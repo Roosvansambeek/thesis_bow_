@@ -21,6 +21,10 @@ def hello_world():
     courses = load_courses_from_db()
     return render_template('courses.html', courses=courses, filters=filters)
 
+@app.route("/inlogpage")
+def load_inlogpage():
+    return render_template('inlogpage.html')
+
 @app.route("/welcome")
 def welcome():
     return render_template('welcome.html')
