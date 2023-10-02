@@ -25,6 +25,26 @@
            height: auto;
         }
 
+        .favorites-card {
+            max-width: 80%; 
+            height: 60px; 
+            background-color: #f9f9f9; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .favorites-card h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
         .row {
             display: flex;
             justify-content: center;
@@ -63,6 +83,9 @@
 <div id="banner">
     <div class="row center-object">
         <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png" alt="TiU Logo">
+    </div>
+    <div class="favorites-card">
+        <h1>My favorites</h1> <!-- Title inside the horizontal card -->
     </div>
 </div>
 
