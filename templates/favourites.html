@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Favorite Courses</title>
+    <title>Favourite Courses</title>
     {% include 'bootstrap.html' %}
     <style>
         body {
@@ -25,7 +25,7 @@
            height: auto;
         }
 
-        .favorites-card {
+        .favourites-card {
         width: 940px; 
         height: 60px;
         background-color: #f9f9f9; 
@@ -38,7 +38,7 @@
         margin: 20px auto;
     }
 
-        .favorites-card h1 {
+        .favourites-card h1 {
         margin: 0;
         padding: 0;
         font-size: 1.5em;
@@ -106,8 +106,8 @@
     <div class="row center-object">
         <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png" alt="TiU Logo">
     </div>
-    <div class="favorites-card">
-        <h1>My favorites</h1> 
+    <div class="favourites-card">
+        <h1>My favourites</h1> 
     </div>
 </div>
 
@@ -130,7 +130,9 @@
     </div>
     {% endfor %}
    <!-- Mail Button -->
-    <a href="mailto:?subject=My favorite subjects from Tilburg University" class="mail-button">Mail My Favorites</a>
+    <a href="mailto:?subject=My favourite subjects from Tilburg University" class="mail-button">Mail My Favorites</a>
 </div>
 </body>
+  {% include 'footer.html' %}
+
 </html>

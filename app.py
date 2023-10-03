@@ -43,9 +43,9 @@ def show_course(course_code):
     return render_template('coursepage.html',
                         course=course)
 
-@app.route('/favorites')
+@app.route('/favourites')
 def favorite_courses():
-    return render_template('favorites.html')
+    return render_template('favourites.html')
 
 
 if __name__ == "__main__":
