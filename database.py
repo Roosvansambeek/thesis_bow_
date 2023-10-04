@@ -55,6 +55,26 @@ def load_best_courses_from_db():
             best_courses.append(result_dict)
         return best_courses
 
+def load_explore_courses_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Explore'"))
+        explore_courses = []
+        columns = result.keys()
+        for row in result:
+            result_dict = {column: value for column, value in zip(columns, row)}
+            explore_courses.append(result_dict)
+        return explore_courses
+
+def load_compulsory_courses_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Compulsory'"))
+        compulsory_courses = []
+        columns = result.keys()
+        for row in result:
+            result_dict = {column: value for column, value in zip(columns, row)}
+            compulsory_courses.append(result_dict)
+        return compulsory_courses
+
 
 
 
