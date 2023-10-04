@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify
-from database import load_courses_from_db, load_course_from_db
+from database import load_courses_from_db, load_course_from_db, load_best_courses_from_db, load_carousel_courses_from_db
 
 app = Flask(__name__)
 
@@ -14,7 +14,9 @@ def landing():
 
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    carousel_courses = load_carousel_courses_from_db()
+    best_courses = load_best_courses_from_db()
+    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses)
 
 @app.route("/courses")
 def hello_world():
