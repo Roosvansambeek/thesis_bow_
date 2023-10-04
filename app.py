@@ -15,8 +15,9 @@ def landing():
 @app.route("/home")
 def home():
     carousel_courses = load_carousel_courses_from_db()
+    num_carousel_courses = len(carousel_courses)
     best_courses = load_best_courses_from_db()
-    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses)
+    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses)
 
 @app.route("/courses")
 def hello_world():
