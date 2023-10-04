@@ -4,38 +4,52 @@
     <title>Favourite Courses</title>
     {% include 'bootstrap.html' %}
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+          body {
+          margin-top: 5px;
         }
       
-        .center-object {
-           display: flex;
-           justify-content: center;
-           align-items: center;
-           margin-block: 20px;
+        .container {
+          margin-top: 50px;
         }
-
-        .favourites-card {
-        width: 940px; 
-        height: 60px;
-        background-color: #f9f9f9; 
-        border: 1px solid #e0e0e0; 
-        border-radius: 8px; 
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 20px auto;
-    }
-
-        .favourites-card h1 {
-        margin: 0;
-        padding: 0;
-        font-size: 1.5em;
-        color: #333;
-    }
+      
+        .section {
+          margin-top: 25px;
+          margin-bottom: 25px;
+        }
+      
+        .custom-crd {
+          background-color: #F2D398;
+          border: 2px solid #986B23;
+          color: black;
+          display: inline-block;
+          padding: 5px 10px;
+          margin: 0;             /* ensure no margin */
+          height: 40px;          /* ensure height fits content */
+        }
+      
+        .custom-crd .card-body {
+          padding: 0;            /* remove padding from the card body */
+          margin: 0;             /* ensure no margin */
+        }
+      
+        .custom-crd {
+          transition: all 0.3s ease;
+        }
+              
+        .custom-crd:hover {
+          box-shadow:
+            -7px -7px 20px 0px #fff9,
+            -4px -4px 5px 0px #fff9,
+            7px 7px 20px 0px #0002,
+            4px 4px 5px 0px #0001;
+            font-weight: bold;
+        }
+      
+        i {
+                font-size: 18px;
+                margin-left: 10px;
+              }
+            
         .mail-button {
         width: 940px; 
         height: 60px;
@@ -57,66 +71,57 @@
         .mail-button:hover {
         background-color: #e0e0e0; 
 }
-      .container {
-        padding-top: 100px; 
-    }
+      .card {
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
 
-        .row {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap; 
-            gap: 20px; 
-            padding: 20px 0; 
-        }
+      .left {
+        align-content: left;
+      }
 
-        .column {
-            flex: 1; 
-            max-width: 300px; 
-            background-color: #f9f9f9; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-            padding: 20px; 
-        }
+      .right {
+        align-content: right;
+      }
 
-        h3 {
-            border-bottom: 2px solid #333; 
-            padding-bottom: 10px; 
-            margin-bottom: 15px; 
-        }
-
-        ul {
-            list-style-type: disc; 
-            margin-left: 20px; 
-        }
-
-        li strong {
-            color: #0073aa; 
-        }
+      i {
+        color: #000000;
+        cursor: pointer;
+      }
     </style>
 </head>
 <body>
   {% include 'navbar.html' %}
-
-
 <div class="container">
-    <!-- Four rows of cards, each row containing 4 cards -->
-    
-    {% for _ in range(3) %}
-    <div class="row">
-        {% for _ in range(3) %}
-        <div class="column">
-            
-            <h3>Course Title</h3>
-            <ul>
-                <li><strong>Course Detail 1</strong></li>
-                <li><strong>Course Detail 2</strong></li>
-                <li><strong>Course Detail 3</strong></li>
-            </ul>
-        </div>
-        {% endfor %}
+  <div class="row">
+    <div class="col-6 left">
+      <h3><b>Your <span style="color: #ACBED8;">Favourites!</span></b></h3>
     </div>
-    {% endfor %}
+    <div class="col-6 right">
+      <i class="fa-solid fa-envelope fa-xl" title="E-mail favorits" style="color: #000000;"></i>
+    </div>
+  </div>
+  <div class="row">
+      {% for carousel_course in carousel_courses %}
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
+                      <p class="course-details">
+                        Course code: {{ carousel_course['course_code'] }} <br>
+                        Language: {{ carousel_course['language'] }}
+                      </p>
+                    <div class="card custom-crd">
+                      <div class="card-body">
+                          <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+</div>
    <!-- Mail Button -->
     <a href="mailto:?subject=My favourite subjects from Tilburg University" class="mail-button">Mail My Favorites</a>
 </div>
