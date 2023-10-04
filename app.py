@@ -50,7 +50,8 @@ def show_course(course_code):
 
 @app.route('/favourites')
 def favorite_courses():
-    return render_template('favourites.html')
+    carousel_courses = load_carousel_courses_from_db()
+    return render_template('favourites.html', carousel_courses=carousel_courses)
 
 
 if __name__ == "__main__":
