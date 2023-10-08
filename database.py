@@ -88,21 +88,17 @@ def get_rating_from_db(course_code):
 
 def add_rating_to_db(course_code, data):
     with engine.connect() as conn:
-        existing_rating = conn.execute(
-            text("SELECT course_code FROM ratings WHERE course_code = :course_code"),
-            {"course_code": course_code}
-        ).fetchone()
-      
-        if existing_rating:
-            conn.execute(
-                text("UPDATE ratings SET rating = :rating WHERE course_code = :course_code"),
-                {"course_code": course_code, "rating": data['favorite']}
-            )
-        else:
             conn.execute(
                 text("INSERT INTO ratings (course_code, rating) VALUES (:course_code, :rating)"),
                 {"course_code": course_code, "rating": data['favorite']}
             )
+
+def remove_rating_from_db(course_code):
+    with engine.connect() as conn:
+        conn.execute(
+            text("DELETE FROM ratings WHERE course_code = :course_code"),
+            {"course_code": course_code}
+        )
 
 
 
