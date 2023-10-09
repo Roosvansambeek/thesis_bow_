@@ -75,9 +75,19 @@ def load_compulsory_courses_from_db():
             compulsory_courses.append(result_dict)
         return compulsory_courses
 
+def load_favorite_courses_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM courses WHERE favorite = 1"))
+        favorite_courses = []
+        columns = result.keys()
+        for row in result:
+            result_dict = {column: value for column, value in zip(columns, row)}
+            favorite_courses.append(result_dict)
+        return favorite_courses
+
 def get_rating_from_db(course_code):
     with engine.connect() as conn:
-        query = text("SELECT rating FROM ratings WHERE course_code = :val")
+        query = text("SELECT favorite FROM courses WHERE course_code = :val")
         result = conn.execute(query, {"val": course_code})
         rating_row = result.fetchone()
         if rating_row is not None:
@@ -89,14 +99,14 @@ def get_rating_from_db(course_code):
 def add_rating_to_db(course_code, data):
     with engine.connect() as conn:
             conn.execute(
-                text("INSERT INTO ratings (course_code, rating) VALUES (:course_code, :rating)"),
+                text("UPDATE courses SET favorite = :rating WHERE course_code = :course_code"),
                 {"course_code": course_code, "rating": data['favorite']}
             )
 
-def remove_rating_from_db(course_code):
+def remove_rating_from_db(course_code, data):
     with engine.connect() as conn:
         conn.execute(
-            text("DELETE FROM ratings WHERE course_code = :course_code"),
+            text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
             {"course_code": course_code}
         )
 

@@ -28,8 +28,8 @@
         }
       
         .custom-crd .card-body {
-          padding: 0;            /* remove padding from the card body */
-          margin: 0;             /* ensure no margin */
+          padding: 0;
+          margin: 0;
         }
       
         .custom-crd {
@@ -102,14 +102,17 @@
     </div>
   </div>
   <div class="row">
-      {% for carousel_course in carousel_courses %}
+      {% for favorite_course in favorite_courses %}
         <div class="col-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
+                    <h5 class="card-title"><b>{{ favorite_course['course_name'] }}</b></h5>
                       <p class="course-details">
-                        Course code: {{ carousel_course['course_code'] }} <br>
-                        Language: {{ carousel_course['language'] }}
+                        {% if favorite_course['content'] | length > 250 %}
+                          {{ favorite_course['content'][:250] }}...
+                        {% else %}
+                          {{ favorite_course['content'] }}
+                        {% endif %}
                       </p>
                     <div class="card custom-crd">
                       <div class="card-body">

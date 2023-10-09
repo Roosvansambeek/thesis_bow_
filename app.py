@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect
-from database import load_courses_from_db, load_course_from_db, load_best_courses_from_db, load_carousel_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, add_rating_to_db, get_rating_from_db, remove_rating_from_db
+from database import load_courses_from_db, load_course_from_db, load_best_courses_from_db, load_carousel_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, add_rating_to_db, get_rating_from_db, remove_rating_from_db, load_favorite_courses_from_db
 
 app = Flask(__name__)
 
@@ -58,8 +58,8 @@ def show_course(course_code):
 
 @app.route('/favourites')
 def favorite_courses():
-    carousel_courses = load_carousel_courses_from_db()
-    return render_template('favourites.html', carousel_courses=carousel_courses)
+    favorite_courses = load_favorite_courses_from_db()
+    return render_template('favourites.html', favorite_courses=favorite_courses)
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
@@ -71,7 +71,7 @@ def rating_course(course_code):
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
     data = request.form
-    remove_rating_from_db(course_code)
+    remove_rating_from_db(course_code, data)
     previous_page = request.referrer
     return redirect(previous_page)
 
