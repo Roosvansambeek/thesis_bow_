@@ -7,10 +7,18 @@
       <div class="col-4">
           <div class="card">
               <div class="card-body">
+                <div class="course-header">
                   <h5 class="card-title"><b>{{ compulsory_course['course_name'] }}</b></h5>
+                  <div class="star-button">
+                    {% include 'star_compulsory.html' %}
+                  </div>
+                </div>
                   <p class="course-details">
-                    Course code: {{ compulsory_course['course_code'] }} <br>
-                    Language: {{ compulsory_course['language'] }}
+                    {% if compulsory_course['content'] | length > 200 %}
+                      {{ compulsory_course['content'][:200] }}...
+                    {% else %}
+                      {{ compulsory_course['content'] }}
+                    {% endif %}
                   </p>
                 <div class="card custom-crd">
                     <div class="card-body">

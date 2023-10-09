@@ -23,57 +23,30 @@ def load_courses_from_db():
       courses.append(result_dict)
     return courses
 
-def load_course_from_db(course_code):
+def get_rating_from_db(course_code):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE course_code = :val"), parameters=dict(val=course_code))
-        course = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            if len(row) == 0:
-                return None
-            else:
-                return result_dict
+        query = text("SELECT favorite FROM courses WHERE course_code = :val")
+        result = conn.execute(query, {"val": course_code})
+        rating_row = result.fetchone()
+        if rating_row is not None:
+            rating = rating_row[0]
+            return rating
+        else:
+            return None
 
-def load_carousel_courses_from_db():
+def add_rating_to_db(course_code, data):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
-        carousel_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            carousel_courses.append(result_dict)
-        return carousel_courses
+            conn.execute(
+                text("UPDATE courses SET favorite = :rating WHERE course_code = :course_code"),
+                {"course_code": course_code, "rating": data['favorite']}
+            )
 
-def load_best_courses_from_db():
+def remove_rating_from_db(course_code, data):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best'"))
-        best_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            best_courses.append(result_dict)
-        return best_courses
-
-def load_explore_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Explore'"))
-        explore_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            explore_courses.append(result_dict)
-        return explore_courses
-
-def load_compulsory_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Compulsory'"))
-        compulsory_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            compulsory_courses.append(result_dict)
-        return compulsory_courses
+        conn.execute(
+            text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
+            {"course_code": course_code}
+        )
 
 
 
