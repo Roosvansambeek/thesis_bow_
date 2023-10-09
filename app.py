@@ -62,7 +62,12 @@ def show_course(course_code):
 def favorite_courses():
     courses = load_courses_from_db()
     favorite_courses = [course for course in courses if course['favorite'] == 1]
-    return render_template('favourites.html', favorite_courses=favorite_courses)
+    ratings_dict = {}
+    for course in courses:
+        course_code = course['course_code']
+        rating_db = get_rating_from_db(course_code)
+        ratings_dict[course_code] = rating_db
+    return render_template('favourites.html', favorite_courses=favorite_courses, ratings_dict=ratings_dict)
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
