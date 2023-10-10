@@ -53,6 +53,10 @@ def favorite_courses():
     carousel_courses = load_carousel_courses_from_db()
     return render_template('favourites.html', carousel_courses=carousel_courses)
 
+@app.route("/interests")
+def get_interests():
+    return render_template('interests.html')
+
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
