@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect
-from database import load_courses_from_db, add_rating_to_db, get_rating_from_db, remove_rating_from_db
+from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db
 
 app = Flask(__name__)
 
@@ -14,21 +14,12 @@ def landing():
 
 @app.route("/home")
 def home():
-    courses = load_courses_from_db()
-    carousel_courses = [course for course in courses if course['site_placement'] == 'Carousel']
+    carousel_courses = load_carousel_courses_from_db()
     num_carousel_courses = len(carousel_courses)
-    best_courses = [course for course in courses if course['site_placement'] == 'Best']
-    explore_courses = [course for course in courses if course['site_placement'] == 'Explore']
-    compulsory_courses = [course for course in courses if course['site_placement'] == 'Compulsory']
-  
-    # Create a dictionary to store ratings for each course
-    ratings_dict = {}
-    for course in courses:
-        course_code = course['course_code']
-        rating_db = get_rating_from_db(course_code)
-        ratings_dict[course_code] = rating_db
-
-    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses, ratings_dict=ratings_dict)
+    best_courses = load_best_courses_from_db()
+    explore_courses = load_explore_courses_from_db()
+    compulsory_courses = load_compulsory_courses_from_db()
+    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
 
 @app.route("/courses")
 def hello_world():
@@ -60,14 +51,8 @@ def show_course(course_code):
 
 @app.route('/favourites')
 def favorite_courses():
-    courses = load_courses_from_db()
-    favorite_courses = [course for course in courses if course['favorite'] == 1]
-    ratings_dict = {}
-    for course in courses:
-        course_code = course['course_code']
-        rating_db = get_rating_from_db(course_code)
-        ratings_dict[course_code] = rating_db
-    return render_template('favourites.html', favorite_courses=favorite_courses, ratings_dict=ratings_dict)
+    favorite_courses = load_favorite_courses_from_db()
+    return render_template('favourites.html', favorite_courses=favorite_courses)
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
