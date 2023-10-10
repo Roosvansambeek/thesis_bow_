@@ -1,4 +1,4 @@
-{% if ratings_dict.get(favorite_course['course_code']) != 1 %}
+{% if favorite_course['favorite'] != 1 %}
 <form action="/course/{{ favorite_course['course_code'] }}/rating" method="post">
     <label class="star">
       <input type="checkbox" 
