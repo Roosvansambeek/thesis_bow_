@@ -7,21 +7,21 @@
           {% endfor %}
         </div>
         <div class="carousel-inner">
-          {% for carousel_course in carousel_courses %}
+          {% for course in carousel_courses %}
           <div class="carousel-item {% if loop.first %}active{% endif %}">
-              <a href="/course/{{carousel_course['course_code']}}" target="_blank" class="card">
+              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
                 <div class="carousel-card-body">
                   <div class="course-header">
-                    <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
+                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
                     <div class="star-button">
-                      {% include 'star_carousel.html' %}
+                      {% include 'star.html' %}
                     </div>
                   </div>
                   <p class="course-details">
-                    {% if carousel_course['content'] | length > 500 %}
-                      {{ carousel_course['content'][:500] }}...
+                    {% if course['content'] | length > 500 %}
+                      {{ course['content'][:500] }}...
                     {% else %}
-                      {{ carousel_course['content'] }}
+                      {{ course['content'] }}
                     {% endif %}
                   </p>
                 </div>

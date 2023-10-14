@@ -1,5 +1,5 @@
-{% if explore_course['favorite'] != 1 %}
-<form action="/course/{{ explore_course['course_code'] }}/rating" method="post">
+{% if course['favorite'] != 1 %}
+<form action="/course/{{ course['course_code'] }}/rating" method="post">
     <label class="star">
       <input type="checkbox" 
              name="favorite" 
@@ -9,7 +9,7 @@
     </label>
 </form>
 {% else %}
-<form action="/course/{{ explore_course['course_code'] }}/remove_rating" method="post">
+<form action="/course/{{ course['course_code'] }}/remove_rating" method="post">
     <label class="star">
       <input type="checkbox" 
              onchange="this.form.submit()"
