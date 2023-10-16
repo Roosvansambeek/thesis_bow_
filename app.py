@@ -57,16 +57,16 @@ def favorite_courses():
     favorite_courses = load_favorite_courses_from_db()
     return render_template('favourites.html', favorite_courses=favorite_courses)
 
+@app.route("/interests")
+def get_interests():
+    return render_template('interests.html')
+
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
     data = request.form
     add_rating_to_db(course_code, data)
     previous_page = request.referrer
     return redirect(previous_page)
-
-@app.route("/interests")
-def get_interests():
-    return render_template('interests.html')
 
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
