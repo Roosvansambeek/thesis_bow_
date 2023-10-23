@@ -1,11 +1,12 @@
 <div class="dropdown" data-bs-theme="light">
-    <button class="btn custom-button dropdown-toggle" type="button" id="dropdownMenuButtonLight{{ key }}" data-bs-toggle="dropdown" aria-expanded="false">
-      {{ key }}
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight{{ key }}">
-      {% for item in filters[key] %}
-        <li><a class="dropdown-item" href="#">{{ item }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-  <br>
+  <button class="btn custom-button dropdown-toggle" type="button" id="dropdownMenuButtonLight{{ key }}" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ key }}
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLight{{ key }}">
+    {% for item in filters[key] %}
+      <li><a class="dropdown-item" href="#">{{ item }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+<br>
+

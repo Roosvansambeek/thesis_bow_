@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>State Interests</title>
+  {% include 'bootstrap.html' %}
+  <style>
+    .center-object {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-block: 20px;
+    }
+
+    #TiU_logo {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 40%;
+      max-width: 100%;
+      height: auto;
+    }
+    .checkbox-list {
+      padding: 0;
+      margin: 0;
+      clear: both;
+    }
+
+    .checkbox-list li {
+      list-style-type: none;
+      list-style-position: outside;
+      padding: 5px; 
+      float: left;
+      margin-right: 5px; 
+      margin-bottom: 5px;
+    }
+
+    .checkbox-list input[type="checkbox"]:not(:checked),
+    .checkbox-list input[type="checkbox"]:checked {
+      position: absolute;
+      left: -9999%;
+    }
+
+    .checkbox-list input[type="checkbox"] + label {
+      padding: 10px 25px;
+      border: 2px solid #FFF;
+      border-radius: 10px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 500;
+      background: #ACBED8;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-flex;
+      padding: 5px 15px;
+      color: #000000;
+
+    }
+
+    .checkbox-list input[type="checkbox"]:checked + label {
+      border: 1px solid white;
+      color: white;
+      background-color: black;
+    }
+
+    .btn.btn-primary {
+      background-color: #000;
+      color: #ACBED8;
+      border: 2px solid #FFF;
+      padding: 5px 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: #ACBED8;
+      color: #FFF;
+      border: 2px solid #FFF;
+    }
+
+
+
+    /* Float the submit button to the right */
+    input[type="submit"] {
+      float: right;
+    }
+
+  </style>
+</head>
+
+
+
+
+<body>
+  <div id="banner">
+    <div class="row center-object">
+      <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png" alt="TiU Logo">
+    </div>
+  </div>
+
+  <!-- creating two sides -->
+  <div class="container">
+    <div class="row">
+      <!-- Left Column -->
+      <div class="col">
+        <h1><b>State your interest <span style="color: #ACBED8;"> And we do the rest</span></b></h1>
+        <p>Welcome to <b><span style="color: #000;">Tilburg University's</span></b> course catalogue! This directory is your guide to our diverse academic offerings. As you embark on your <b><span style="color: #000;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col">
+        <!-- Dividing the right column into two sections -->
+        <div class="row">
+          <div class="col-12">
+            <h1><b>Select Your Interests</b></h1>
+            <form action="/state_interests/stated.html" method="post">
+              <ul class="checkbox-list">
+                <li>
+                  <input type='checkbox' id='marketing' name='marketing'>
+                  <label for='marketing'>Marketing</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='economics' name='economics'>
+                  <label for='economics'>Economics</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='management' name='management'>
+                  <label for='management'>Management</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='sustainability' name='sustainability'>
+                  <label for='sustainability'>Sustainability</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='biology' name='biology'>
+                  <label for='biology'>biology</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='politics' name='politics'>
+                  <label for='politics'>politics</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='law' name='law'>
+                  <label for='law'>law</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='communication' name='communication'>
+                  <label for='communication'>communication</label>
+                </li>
+              </ul>
+              <br><br><br><br><br><br><br>
+
+              <h1><b>State your level</b></h1>
+              <ul class="checkbox-list">
+                <li>
+                  <input type='checkbox' id='Bachelor' name='Bachelor'>
+                  <label for='Bachelor'>Bachelor</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='Master' name='Master'>
+                  <label for='Master'>Master</label>
+                </li>
+              </ul>
+
+              <br><br><br>
+              <input type="submit" value="Submit" class="btn btn-primary">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

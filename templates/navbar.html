@@ -1,88 +1,88 @@
 <style>
-    nav {
-        background-color: #FFFFFF;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      
-    }
+  nav {
+      background-color: #FFFFFF;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
-    .custom-text, a, a:hover, a:focus, a:active {
-        color: black;
-        text-decoration: none;
-        outline: none;
-    }
+  }
 
-    .custom-btn {
-        background-color: #986B23;
-        border: 2px solid #986B23;
-        color: black;
-        width: 100%;
-    }
+  .custom-text, a, a:hover, a:focus, a:active {
+      color: black;
+      text-decoration: none;
+      outline: none;
+  }
 
-    img {
-      width: 30%;
-      margin-left: 15px;
-    }
-
-    .navbar-content {
-      display: flex;
-      justify-content: space-between;
+  .custom-btn {
+      background-color: #986B23;
+      border: 2px solid #986B23;
+      color: black;
       width: 100%;
-    }
+  }
 
-    .left {
+  img {
+    width: 30%;
+    margin-left: 15px;
+  }
+
+  .navbar-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .left {
+    display: flex;
+    align-items: center; /* Vertically aligns items to the center */
+    justify-content: left;
+  }
+
+   .right {
       display: flex;
-      align-items: center; /* Vertically aligns items to the center */
-      justify-content: left;
+      align-items: center;
+      justify-content: right;
     }
 
-     .right {
-        display: flex;
-        align-items: center;
-        justify-content: right;
-      }
+    .nav-item {
+      margin-left: 15px;
+      margin-right: 15px;
+    }
 
-      .nav-item {
-        margin-left: 15px;
-        margin-right: 15px;
-      }
-
-      i {
-        margin-right: 5px;
-      }
+    i {
+      margin-right: 5px;
+    }
 </style>
 
 <!-- Fixed navbar -->
 <nav class="navbar navbar-expand-md fixed-top">
-    <div class="navbar-content">
-        <div class="col-6 left">
-           <a href="/home">
-            <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png">
-           </a>
-        </div>
+  <div class="navbar-content">
+      <div class="col-6 left">
+         <a href="/home">
+          <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png">
+         </a>
+      </div>
 
-        <div class="col-6 right">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="custom-text" href="/home"><i class="fa-solid fa-house" style="color: #000000;"></i><b>Home</b></a>
-                </li>
-                <li class="nav-item">
-                    <a class="custom-text" href="/courses"><i class="fa-solid fa-book" style="color: #000000;"></i><b>Courses</b></a>
-                </li>
-                <li class="nav-item">
-                    <a class="custom-text" href="/favourites"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favourites</b></a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-primary custom-btn" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="custom-text" href="/"><i class="fa-solid fa-circle-user fa-2xl" style="color: #000000;"></i></a>
-                </li>
-            </ul>
-        </div>
-    </div>
+      <div class="col-6 right">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="custom-text" href="/home"><i class="fa-solid fa-house" style="color: #000000;"></i><b>Home</b></a>
+              </li>
+              <li class="nav-item">
+                  <a class="custom-text" href="/courses"><i class="fa-solid fa-book" style="color: #000000;"></i><b>Courses</b></a>
+              </li>
+              <li class="nav-item">
+                  <a class="custom-text" href="/favourites"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favourites</b></a>
+              </li>
+          </ul>
+          <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-primary custom-btn" type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="custom-text" href="/"><i class="fa-solid fa-circle-user fa-2xl" style="color: #000000;"></i></a>
+              </li>
+          </ul>
+      </div>
+  </div>
 </nav>
 
 <div style="height:50px"></div>

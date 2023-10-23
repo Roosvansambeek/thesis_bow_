@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy import text
+from sqlalchemy.orm import sessionmaker
 import os
+
+
+# Rest of your code remains the same
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -88,8 +92,73 @@ def remove_rating_from_db(course_code, data):
         )
 
 
+def add_login_to_db(student_number, password):
+  with engine.connect() as conn:
+      conn.execute(
+          text("INSERT INTO users (student_number, password) VALUES (:student_number, :password)"),
+          {"student_number": student_number, "password": password}
+      )
+
+def check_credentials(student_number, password):
+  with engine.connect() as conn:
+      result = conn.execute(
+          text("SELECT * FROM users WHERE student_number = :student_number AND password = :password"),
+          {"student_number": student_number, "password": password}
+      )
+      return result.fetchone() is not None
+
+def add_interests_to_db(data):
+  with engine.connect() as conn:
+      query = text("INSERT INTO users (marketing, economics, management, sustainability, biology, politics, law, communication, Bachelor, Master) "
+                   "VALUES (:marketing, :economics, :management, :sustainability, :biology, :politics, :law, :communication, :Bachelor, :Master)")
+
+      # Construct the parameter dictionary
+      params = {
+          'marketing': data.get('marketing'),
+          'economics': data.get('economics'),
+          'management': data.get('management'),
+          'sustainability': data.get('sustainability'),
+          'biology': data.get('biology'),
+          'politics': data.get('politics'),
+          'law': data.get('law'),
+          'communication': data.get('communication'),
+          'Bachelor': data.get('Bachelor'),
+          'Master': data.get('Master')
+      }
+
+      conn.execute(query, params)
 
 
+def update_interests(student_number, password, data):
+  with engine.connect() as conn:
+      query = text(
+          "UPDATE users SET "
+          "marketing = :marketing, "
+          "economics = :economics, "
+          "management = :management, "
+          "sustainability = :sustainability, "
+          "biology = :biology, "
+          "politics = :politics, "
+          "law = :law, "
+          "communication = :communication, "
+          "Bachelor = :Bachelor, "
+          "Master = :Master "
+              "WHERE student_number = :student_number AND password = :password"
+          )
+# Add student_number and password to the parameter dictionary
+      params = {
+          'marketing': data.get('marketing'),
+          'economics': data.get('economics'),
+          'management': data.get('management'),
+          'sustainability': data.get('sustainability'),
+          'biology': data.get('biology'),
+          'politics': data.get('politics'),
+          'law': data.get('law'),
+          'communication': data.get('communication'),
+          'Bachelor': data.get('Bachelor'),
+          'Master': data.get('Master'),
+          'student_number': student_number,
+          'password': password
+      }
 
-
-
+      conn.execute(query, params)
