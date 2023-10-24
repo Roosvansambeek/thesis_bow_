@@ -95,21 +95,21 @@ def remove_rating_from_db(course_code, data):
 def add_login_to_db(student_number, password):
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO users (student_number, password) VALUES (:student_number, :password)"),
+          text("INSERT INTO r_users (student_number, password) VALUES (:student_number, :password)"),
           {"student_number": student_number, "password": password}
       )
 
 def check_credentials(student_number, password):
   with engine.connect() as conn:
       result = conn.execute(
-          text("SELECT * FROM users WHERE student_number = :student_number AND password = :password"),
+          text("SELECT * FROM r_users WHERE student_number = :student_number AND password = :password"),
           {"student_number": student_number, "password": password}
       )
       return result.fetchone() is not None
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
-      query = text("INSERT INTO users (marketing, economics, management, sustainability, biology, politics, law, communication, Bachelor, Master) "
+      query = text("INSERT INTO r_users (marketing, economics, management, sustainability, biology, politics, law, communication, Bachelor, Master) "
                    "VALUES (:marketing, :economics, :management, :sustainability, :biology, :politics, :law, :communication, :Bachelor, :Master)")
 
       # Construct the parameter dictionary
@@ -132,7 +132,7 @@ def add_interests_to_db(data):
 def update_interests(student_number, password, data):
   with engine.connect() as conn:
       query = text(
-          "UPDATE users SET "
+          "UPDATE r_users SET "
           "marketing = :marketing, "
           "economics = :economics, "
           "management = :management, "
@@ -162,3 +162,14 @@ def update_interests(student_number, password, data):
       }
 
       conn.execute(query, params)
+
+
+
+def add_views_to_db(student_number, course_code, timestamp):
+  with engine.connect() as conn:
+      query = text("INSERT INTO course_views (student_number, course_code, timestamp) VALUES (:student_number, :course_code, :timestamp)")
+      conn.execute(query, {"student_number": student_number, "course_code": course_code, "timestamp": timestamp})
+
+
+
+
