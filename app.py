@@ -58,6 +58,7 @@ def stated_interests():
     if student_number and password:
         update_interests(student_number, password, data)
 
+    previous_page = request.referrer
     return redirect(f'/home/{student_number}')
 
 
@@ -67,9 +68,9 @@ def home(student_number):
     student_number = student_number or session.get('student_number', default_value)
 
     # Rest of your code
-    carousel_courses = load_carousel_courses_from_db()
+    carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
-    best_courses = load_best_courses_from_db()
+    best_courses = load_best_courses_from_db(student_number)
     explore_courses = load_explore_courses_from_db()
     compulsory_courses = load_compulsory_courses_from_db()
 
@@ -112,17 +113,16 @@ def show_course(student_number, course_code):
 
     return render_template('coursepage.html', course=course[0])
 
-
-@app.route('/favourites')
-def favorite_courses():
-    favorite_courses = load_favorite_courses_from_db()
-    return render_template('favourites.html', favorite_courses=favorite_courses)
-
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
-    data = request.form
-    add_rating_to_db(course_code, data)
-    previous_page = request.referrer
+    data = request.form.to_dict()  
+    student_number = session.get('student_number', 0)  # Convert to integer
+    if student_number is not None and 'favorite' in data:
+        add_rating_to_db(course_code, student_number, data)
+
+    # Capture the previous_page and include the form data as query parameters
+    previous_page = request.referrer + "?favorite=" + data.get("favorite", "0")
+
     return redirect(previous_page)
 
 
@@ -130,8 +130,11 @@ def rating_course(course_code):
 
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
-    data = request.form
-    remove_rating_from_db(course_code, data)
+    data = request.form.to_dict()
+    student_number = session.get('student_number', 0) # Convert to integer
+    if student_number is not NOve and 'favorite' in data:
+      remove_rating_from_db(course_code, student_number, data)
+      
     previous_page = request.referrer
     return redirect(previous_page)
 

@@ -27,25 +27,38 @@ def load_courses_from_db():
       courses.append(result_dict)
     return courses
 
-def load_carousel_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
-        carousel_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            carousel_courses.append(result_dict)
-        return carousel_courses
+def load_carousel_courses_from_db(student_number):
+  with engine.connect() as conn:
+      query = text("""
+          SELECT c.*, IFNULL(r.rating, 0) AS favorite
+          FROM courses c
+          LEFT JOIN r_favorites r ON c.course_code = r.course_code 
+              AND r.student_number = :student_number
+          WHERE c.site_placement = 'Carousel'
+      """)
+      carousel_courses = []
+      for row in conn.execute(query, {"student_number": student_number}):
+          result_dict = row._asdict()  # Convert the row to a dictionary
+          carousel_courses.append(result_dict)
+      return carousel_courses
 
-def load_best_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best'"))
-        best_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            best_courses.append(result_dict)
-        return best_courses
+
+
+def load_best_courses_from_db(student_number):
+  with engine.connect() as conn:
+    query = text("""
+        SELECT c.*, IFNULL(r.rating, 0) AS favorite
+        FROM courses c
+        LEFT JOIN r_favorites r ON c.course_code = r.course_code 
+            AND r.student_number = :student_number
+        WHERE c.site_placement = 'Best'
+    """)
+    best_courses = []
+    for row in conn.execute(query, {"student_number": student_number}):
+        result_dict = row._asdict()  # Convert the row to a dictionary
+        best_courses.append(result_dict)
+    return best_courses
+
 
 def load_explore_courses_from_db():
     with engine.connect() as conn:
@@ -77,19 +90,21 @@ def load_favorite_courses_from_db():
             favorite_courses.append(result_dict)
         return favorite_courses
 
-def add_rating_to_db(course_code, data):
-    with engine.connect() as conn:
-            conn.execute(
-                text("UPDATE courses SET favorite = :rating WHERE course_code = :course_code"),
-                {"course_code": course_code, "rating": data['favorite']}
-            )
 
-def remove_rating_from_db(course_code, data):
-    with engine.connect() as conn:
-        conn.execute(
-            text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
-            {"course_code": course_code}
-        )
+def add_rating_to_db(course_code, student_number, data):
+  with engine.connect() as conn:
+      conn.execute(
+          text("INSERT INTO r_favorites (course_code, student_number, rating) VALUES (:course_code, :student_number, :rating)"),
+          {"course_code": course_code, "student_number": student_number, "rating": data['favorite']}
+      )
+
+def remove_rating_from_db(course_code, student_number):
+  with engine.connect() as conn:
+      conn.execute(
+          text("UPDATE r_favorites SET favorite = 0 WHERE course_code = :course_code AND student_number = :student_number"),
+          {"course_code": course_code, "student_number": student_number}
+      )
+
 
 
 def add_login_to_db(student_number, password):
