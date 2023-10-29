@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_interests_to_db, add_login_to_db, check_credentials, update_interests, add_views_to_db, put_rating_to_db, add_test_to_db, get_test_from_db, load_best_courses_with_favorite_from_db
+from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_interests_to_db, add_login_to_db, check_credentials, update_interests, add_views_to_db
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 
@@ -61,19 +61,8 @@ def stated_interests():
     previous_page = request.referrer
     return redirect(f'/home/{student_number}')
 
-@app.route("/test", methods=['GET', 'POST'])
-def test():
-    favorite_value = get_test_from_db()
-    data = request.form
 
-    if request.method == 'POST' and 'favorite' in data:
-        add_test_to_db(data)
-
-    return render_template('test.html', favorite=favorite_value)
-
-
-
-@app.route("/home/<student_number>", methods=['GET', 'POST'])
+@app.route("/home/<student_number>")
 def home(student_number):
     # Access the student_number from the URL and the session
     student_number = student_number or session.get('student_number', default_value)
@@ -81,51 +70,19 @@ def home(student_number):
     # Rest of your code
     carousel_courses = load_carousel_courses_from_db()
     num_carousel_courses = len(carousel_courses)
-    best_courses = load_best_courses_with_favorite_from_db(student_number)
-    explore_courses = load_explore_courses_from_db()
-    compulsory_courses = load_compulsory_courses_from_db()
-
-    for course in best_courses:
-      print(course['course_code'])
-
-    data = request.form  # Moved the data assignment here
-
-    favorite_value = None
-    if request.method == 'POST' and 'favorite' in data:
-        add_test_to_db(data, student_number)
-        selected_course_code = data.get("course_code")
-        favorite_value = data.get("favorite")
-        print(selected_course_code, favorite_value)
-
-
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses, favorite=favorite_value)
-
-
-
-
-
-
-@app.route("/home/<student_number>/<course_code>/rating", methods=['POST'])
-def sumbit_favorite(student_number, course_code):
-    data = request.form
-    student_number = student_number or session.get('student_number', default_value)
-    carousel_courses = load_carousel_courses_from_db()
-    num_carousel_courses = len(carousel_courses)
-    # Fetch best courses along with user ratings
     best_courses = load_best_courses_from_db(student_number)
     explore_courses = load_explore_courses_from_db()
     compulsory_courses = load_compulsory_courses_from_db()
-    # Put the new rating into the database
-    put_rating_to_db(student_number, course_code, data)
-    # Fetch the user's ratings again after the update
-    best_courses = load_best_courses_from_db(student_number)
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
+    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
 
-
-
-
-      
+import json
+@app.route("/home/<course_code>/rating", methods=['post'])
+def sumbit_favorite(course_code):
+  data = request.args
+  return jsonify(data, course_code)
+  
+  
 @app.route("/courses")
 def hello_world():
     courses = load_courses_from_db()
@@ -162,10 +119,40 @@ def show_course(student_number, course_code):
     return render_template('coursepage.html', course=course[0])
 
 
+from flask import request, jsonify
+
+@app.route('/submit_rating', methods=['POST'])
+def submit_rating():
+    data = request.form.to_dict()
+    student_number = session.get('student_number')  # Replace with your logic to get the student_number
+    add_rating_to_db(data['course_code'], student_number, data)
+    return jsonify({'message': 'Rating submitted successfully'})
+
+
+@app.route("/course/<course_code>/rating", methods=['POST'])
+def rating_course(course_code):
+    data = request.form.to_dict()  
+    student_number = session.get('student_number')  # Convert to integer
+    add_rating_to_db(course_code, student_number, data)
+
+    previous_page = request.referrer
+    return redirect(previous_page)
 
 
 
 
+@app.route("/course/<course_code>/remove_rating", methods=['POST'])
+def remove_rating(course_code):
+    data = request.form.to_dict()
+    student_number = session.get('student_number', None)  # Use None here
+    if student_number is not None and 'favorite' in data:
+        remove_rating_from_db(course_code, student_number)
+
+    previous_page = request.referrer
+    return redirect(previous_page)
+
+
+from flask import request, jsonify
 
 
 
