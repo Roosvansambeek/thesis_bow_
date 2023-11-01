@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_interests_to_db, add_login_to_db, check_credentials, update_interests, add_views_to_db, put_rating_to_db, add_test_to_db, get_test_from_db, load_best_courses_with_favorite_from_db
+from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_favorite_courses_from_db, add_interests_to_db, add_login_to_db, check_credentials, update_interests, add_views_to_db, put_rating_to_db, add_test_to_db, get_test_from_db, load_best_courses_with_favorite_from_db
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 
@@ -78,11 +78,10 @@ def home(student_number):
     student_number = student_number or session.get('student_number', default_value)
 
     # Rest of your code
-    carousel_courses = load_carousel_courses_from_db()
+    carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
     best_courses = load_best_courses_with_favorite_from_db(student_number)
-    explore_courses = load_explore_courses_from_db()
-    compulsory_courses = load_compulsory_courses_from_db()
+    
 
     data = request.form  # Moved the data assignment here
 
@@ -102,18 +101,21 @@ def home(student_number):
         # Update the best_courses here after the change
         best_courses = load_best_courses_with_favorite_from_db(student_number)
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
+    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses)
+
+
 
 @app.route('/favourites/<student_number>')
-def favorite_courses():
-    favorite_courses = load_favorite_courses_from_db()
-    return render_template('favourites.html', favorite_courses=favorite_courses)
+def favorite_courses(student_number):
+    # The student_number parameter should be included in the function signature
+    favorite_courses = load_favorite_courses_from_db(student_number)
+    return render_template('favourites.html', favorite_courses=favorite_courses, student_number=student_number)
 
       
-@app.route("/courses")
-def hello_world():
+@app.route("/courses/<student_number>")
+def hello_world(student_number):
     courses = load_courses_from_db()
-    return render_template('courses.html', courses=courses, filters=filters)
+    return render_template('courses.html', courses=courses, filters=filters, student_number=student_number)
 
 
 @app.route("/welcome")
@@ -126,7 +128,7 @@ def list_courses():
   return jsonify(courses)
 
 
-@app.route("/course/<student_number>/<course_code>")
+@app.route("/course/<course_code>/<student_number>")
 def show_course(student_number, course_code):
     # Load the course data
     courses = load_courses_from_db()
