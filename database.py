@@ -50,10 +50,10 @@ def load_best_courses_from_db():
 def load_best_courses_with_favorite_from_db(student_number):
   with engine.connect() as conn:
       query = text("""
-          SELECT c.*, nt.favorite
+          SELECT c.*, rf.rating
           FROM courses c
-          LEFT JOIN new_test nt
-          ON c.course_code = nt.course_code AND nt.student_number = :student_number
+          LEFT JOIN r_favorites4 rf
+          ON c.course_code = rf.course_code AND rf.student_number = :student_number
           WHERE c.site_placement = 'Best'
       """)
     
@@ -67,12 +67,23 @@ def load_best_courses_with_favorite_from_db(student_number):
 
       return best_courses
 
-
-def add_test_to_db(data, student_number):
+def add_test_to_db(request, student_number, course_code, favorite_value):
   with engine.connect() as conn:
-    query = text("INSERT INTO new_test (favorite, student_number, course_code) VALUES (:favorite, :student_number, :course_code)")
+      # Check if the record already exists
+      existing_record = conn.execute(
+          text("SELECT * FROM r_favorites4 WHERE course_code = :course_code AND student_number = :student_number"),
+          {"course_code": course_code, "student_number": student_number}
+      ).fetchone()
 
-    conn.execute(query, {"favorite": data['favorite'], "student_number": student_number, "course_code": data['course_code']})
+      if existing_record:
+          # Update the existing record
+          query = text("UPDATE r_favorites4 SET rating = :rating WHERE course_code = :course_code AND student_number = :student_number")
+      else:
+          # Insert a new record
+          query = text("INSERT INTO r_favorites4 (course_code, student_number, rating) VALUES (:course_code, :student_number, :rating)")
+
+      conn.execute(query, {"course_code": course_code, "student_number": student_number, "rating": favorite_value})
+
 
 def get_test_from_db(student_number, course_code):
   with engine.connect() as conn:

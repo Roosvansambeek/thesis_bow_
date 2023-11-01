@@ -72,7 +72,6 @@ def test():
     return render_template('test.html', favorite=favorite_value)
 
 
-
 @app.route("/home/<student_number>", methods=['GET', 'POST'])
 def home(student_number):
     # Access the student_number from the URL and the session
@@ -85,45 +84,30 @@ def home(student_number):
     explore_courses = load_explore_courses_from_db()
     compulsory_courses = load_compulsory_courses_from_db()
 
-    for course in best_courses:
-      print(course['course_code'])
-
     data = request.form  # Moved the data assignment here
 
-    favorite_value = None
-    if request.method == 'POST' and 'favorite' in data:
-        add_test_to_db(data, student_number)
-        selected_course_code = data.get("course_code")
-        favorite_value = data.get("favorite")
-        print(selected_course_code, favorite_value)
+    if request.method == 'POST':
+        rating = request.form.get('rating')
+        course_code = request.form.get('course_code')
 
+        if rating == 'on':
+            # Update the database with 'off' status
+            # Implement the code to update the database with 'off'
+            add_test_to_db(request, student_number, course_code, 'on')
+        else:
+            # Update the database with 'on' status
+            # Implement the code to update the database with 'on'
+            add_test_to_db(request, student_number, course_code, 'off')
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses, favorite=favorite_value)
-
-
-
-
-
-
-@app.route("/home/<student_number>/<course_code>/rating", methods=['POST'])
-def sumbit_favorite(student_number, course_code):
-    data = request.form
-    student_number = student_number or session.get('student_number', default_value)
-    carousel_courses = load_carousel_courses_from_db()
-    num_carousel_courses = len(carousel_courses)
-    # Fetch best courses along with user ratings
-    best_courses = load_best_courses_from_db(student_number)
-    explore_courses = load_explore_courses_from_db()
-    compulsory_courses = load_compulsory_courses_from_db()
-    # Put the new rating into the database
-    put_rating_to_db(student_number, course_code, data)
-    # Fetch the user's ratings again after the update
-    best_courses = load_best_courses_from_db(student_number)
+        # Update the best_courses here after the change
+        best_courses = load_best_courses_with_favorite_from_db(student_number)
 
     return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
 
-
-
+@app.route('/favourites/<student_number>')
+def favorite_courses():
+    favorite_courses = load_favorite_courses_from_db()
+    return render_template('favourites.html', favorite_courses=favorite_courses)
 
       
 @app.route("/courses")
@@ -142,8 +126,6 @@ def list_courses():
   return jsonify(courses)
 
 
-
-
 @app.route("/course/<student_number>/<course_code>")
 def show_course(student_number, course_code):
     # Load the course data
@@ -160,14 +142,6 @@ def show_course(student_number, course_code):
     add_views_to_db(student_number, course_code, timestamp)
 
     return render_template('coursepage.html', course=course[0])
-
-
-
-
-
-
-
-
 
 
 
