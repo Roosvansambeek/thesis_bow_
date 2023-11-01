@@ -1,25 +1,8 @@
-<form id="ratingForm" method="post">
-    <label for="star" class="star" onclick="submitForm()">&#9733;</label>
-    <input type="radio" id="star" name="rating" value="1" style="display: none;">
+<form action='/home/{{ student_number }}' method="post">
+    <label>
+        <input type="checkbox" name="rating" {% if carousel_course['rating'] == 'on' %} checked {% endif %}>
+        <input type="hidden" name="course_code" value="{{ carousel_course['course_code'] }}">
+    </label>
+    <input type="submit" value="Save">
 </form>
-
-<script>
-    function submitForm() {
-        // Serialize the form data
-        var formData = new FormData(document.getElementById("ratingForm"));
-
-        // Send a POST request to the server
-        fetch('/submit_rating', {
-            method: 'POST',
-            body: formData
-        }).then(response => {
-            if (response.status === 200) {
-                // Handle a successful response, if needed
-            }
-        });
-
-        // You can also update the star's appearance to indicate that the rating has been submitted
-        document.querySelector('.star').style.color = 'gold';
-    }
-</script>
 
