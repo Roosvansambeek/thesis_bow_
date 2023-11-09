@@ -353,20 +353,12 @@ session = Session()
 # Fetch data from the r_users table
 course_interests = session.query(Cint.student_number, Cint.marketing, Cint.economics).all()
 
-print(course_interests)
 
 
 user_interests_list = [
     {'student_number': student_number, 'user_interests': {'marketing': 1 if marketing == 'on' else 0, 'economics': 1 if economics == 'on' else 0}}
     for student_number, marketing, economics in course_interests
 ]
-
-print(user_interests_list)
-
-
-
-
-
 
 
 
@@ -397,7 +389,7 @@ def get_course_recommendations(student_number):
   # Find the user_interest_vector for the specified student_number
   for user_interest in user_interests_list:
     interests = user_interest['user_interests']
-    print(interests)
+    
 
     user_interest_vector = [interests.get(interest, 0) for interest in tfidf_vectorizer.get_feature_names_out()]
     
@@ -406,21 +398,35 @@ def get_course_recommendations(student_number):
 
     course_indices = similarities.argsort()[0][::-1]
 
-    print(course_indices)
-    
-
     
     # Recommend the top N courses to the user (e.g., top 5)
-    top_n = 5
+    top_n = 6
     recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
 
+
+    student_recommendations = {
+        "student_number": student_number,
+        "recommended_courses": [
+            {
+                "course_code": course["course_code"],
+                "course_content": course["course_content"],
+                "course_title": course["course_title"],
+                "similarity_score": similarities[0, index]
+            }
+            for index, course in recommended_courses.iterrows()
+        ]
+    }
+
+
+
+
+  
     # Display or use the recommended courses
-    print(recommended_courses)
+  return student_recommendations
 
 
 
-student_number = 'sql@sql.nl'
-recommendations = get_course_recommendations(student_number)
+
 
 
 

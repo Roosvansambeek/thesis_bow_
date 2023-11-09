@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database, get_course_recommendations
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 from algorithm import get_recommendations
@@ -68,12 +68,14 @@ def stated_interests():
 def home(student_number):
     # Access the student_number from the URL and the session
     student_number = student_number or session.get('student_number', default_value)
+    
 
     # Rest of your code
     carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
     best_courses = load_best_courses_with_favorite_from_db(student_number)
     recommendations =get_recommendations(student_number)
+    interests_recommendations = get_course_recommendations(student_number)
 
     data = request.form  # Moved the data assignment here
 
@@ -97,7 +99,7 @@ def home(student_number):
         
 
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, recommendations=recommendations)
+    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, recommendations=recommendations, interests_recommendations=interests_recommendations)
 
 
 
