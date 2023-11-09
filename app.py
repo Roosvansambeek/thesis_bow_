@@ -1,8 +1,9 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database, get_course_recommendations
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 from algorithm import get_recommendations
+from algorithminterests import get_course_recommendations
 
 
 app = Flask(__name__)

@@ -67,7 +67,7 @@ session = Session()
 r_favo_data = session.query(Rfavo.student_number, Rfavo.course_code, Rfavo.id).filter(Rfavo.rating == 'on').all()
 
 
-session.close()
+
 
 def get_recommendations(student_number):
   # item-matrix
@@ -117,5 +117,6 @@ def get_recommendations(student_number):
 
   return recommendations
 
-student_number = 'sql@sql.nl'
-recommendations = get_recommendations(student_number)
+
+
+session.close()
