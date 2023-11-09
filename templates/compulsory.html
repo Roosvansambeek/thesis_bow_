@@ -3,21 +3,21 @@
     <h3><b><span style="color: #ACBED8;">Compulsory</span> courses!</b></h3>
   </div>
   <div class="row">
-    {% for compulsory_course in compulsory_courses %}
+    {% for recommendation in interests_recommendations['recommended_courses'] %}
       <div class="col-4">
-            <a href="/course/{{compulsory_course['course_code']}}" target="_blank" class="card">
+              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" target="_blank" class="card">
               <div class="card-body">
                 <div class="course-header">
-                  <h5 class="card-title"><b>{{ compulsory_course['course_name'] }}</b></h5>
+                  <h5 class="card-title"><b>{{ recommendation['course_title'] }}</b></h5>
                   <div class="star-button">
                     {% include 'star_compulsory.html' %}
                   </div>
                 </div>
                   <p class="course-details">
-                    {% if compulsory_course['content'] | length > 200 %}
-                      {{ compulsory_course['content'][:200] }}...
+                    {% if recommendation['course_content'] | length > 200 %}
+                      {{ recommendation['course_content'][:200] }}...
                     {% else %}
-                      {{ compulsory_course['content'] }}
+                      {{ recommendation['course_content'] }}
                     {% endif %}
                   </p>
               </div>
