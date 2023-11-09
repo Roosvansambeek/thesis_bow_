@@ -40,7 +40,6 @@
     }
 
     .checkbox-list input[type="checkbox"] + label {
-      padding: 10px 25px;
       border: 2px solid #FFF;
       border-radius: 10px;
       font-family: 'Lato', sans-serif;
@@ -50,13 +49,13 @@
       transition: all 0.3s ease;
       position: relative;
       display: inline-flex;
-      padding: 5px 15px;
+      padding: 3px 12px;
       color: #000000;
 
     }
 
     .checkbox-list input[type="checkbox"]:checked + label {
-      border: 1px solid white;
+      border: 2px solid white;
       color: white;
       background-color: black;
     }
@@ -65,7 +64,8 @@
       background-color: #000;
       color: #ACBED8;
       border: 2px solid #FFF;
-      padding: 5px 10px;
+      padding: 4px 12px;
+      border-radius: 10px;
     }
 
     .btn-primary:hover {
@@ -75,10 +75,10 @@
     }
 
 
-
     /* Float the submit button to the right */
     input[type="submit"] {
       float: right;
+      
     }
 
   </style>
@@ -99,6 +99,7 @@
     <div class="row">
       <!-- Left Column -->
       <div class="col">
+        <br><br>
         <h1><b>State your interest <span style="color: #ACBED8;"> And we do the rest</span></b></h1>
         <p>Welcome to <b><span style="color: #000;">Tilburg University's</span></b> course catalogue! This directory is your guide to our diverse academic offerings. As you embark on your <b><span style="color: #000;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
       </div>
@@ -108,45 +109,110 @@
         <!-- Dividing the right column into two sections -->
         <div class="row">
           <div class="col-12">
-            <h1><b>Select Your Interests</b></h1>
+            <h3><b>Select Your Interests</b></h3>
             <form action="/state_interests/stated.html" method="post">
               <ul class="checkbox-list">
                 <li>
-                  <input type='checkbox' id='marketing' name='marketing'>
-                  <label for='marketing'>Marketing</label>
+                  <input type='checkbox' id='management' name='management'>
+                  <label for='management'>Management</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='data' name='data'>
+                  <label for='data'>Data</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='law' name='law'>
+                  <label for='law'>Law</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='businesses' name='businesses'>
+                  <label for='businesses'>Businesses</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='psychology' name='psychology'>
+                  <label for='psychology'>Psychology</label>
                 </li>
                 <li>
                   <input type='checkbox' id='economics' name='economics'>
                   <label for='economics'>Economics</label>
                 </li>
                 <li>
-                  <input type='checkbox' id='management' name='management'>
-                  <label for='management'>Management</label>
+                  <input type='checkbox' id='statistics' name='statistics'>
+                  <label for='statistics'>Statistics</label>
                 </li>
                 <li>
-                  <input type='checkbox' id='sustainability' name='sustainability'>
-                  <label for='sustainability'>Sustainability</label>
+                  <input type='checkbox' id='finance' name='finance'>
+                  <label for='finance'>Finance</label>
                 </li>
                 <li>
-                  <input type='checkbox' id='biology' name='biology'>
-                  <label for='biology'>biology</label>
+                  <input type='checkbox' id='philosophy' name='philosophy'>
+                  <label for='philosophy'>Philosophy</label>
                 </li>
                 <li>
-                  <input type='checkbox' id='politics' name='politics'>
-                  <label for='politics'>politics</label>
+                  <input type='checkbox' id='sociology' name='sociology'>
+                  <label for='sociology'>Sociology</label>
                 </li>
                 <li>
-                  <input type='checkbox' id='law' name='law'>
-                  <label for='law'>law</label>
+                  <input type='checkbox' id='entrepreneurship' name='entrepreneurship'>
+                  <label for='entrepreneurship'>Entrepreneurship</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='marketing' name='marketing'>
+                  <label for='marketing'>Marketing</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='accounting' name='accounting'>
+                  <label for='accounting'>Accounting</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='econometrics' name='econometrics'>
+                  <label for='econometrics'>Econometrics</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='media' name='media'>
+                  <label for='media'>Media</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='ethics' name='ethics'>
+                  <label for='ethics'>Ethics</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='programming' name='programming'>
+                  <label for='programming'>Programming</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='health' name='health'>
+                  <label for='health'>Health</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='society' name='society'>
+                  <label for='society'>Society</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='technology' name='technology'>
+                  <label for='technology'>Technology</label>
                 </li>
                 <li>
                   <input type='checkbox' id='communication' name='communication'>
-                  <label for='communication'>communication</label>
+                  <label for='communication'>Communication</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='history' name='history'>
+                  <label for='history'>History</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='culture' name='culture'>
+                  <label for='culture'>Culture</label>
+                </li>
+                <li>
+                  <input type='checkbox' id='language' name='language'>
+                  <label for='language'>Finance</label>
                 </li>
               </ul>
-              <br><br><br><br><br><br><br>
+              <br><br><br><br><br><br><br><br>
 
-              <h1><b>State your level</b></h1>
+              <br><br><br><br><br><br>
+              <h3><b>State your level</b></h3>
               <ul class="checkbox-list">
                 <li>
                   <input type='checkbox' id='Bachelor' name='Bachelor'>
@@ -158,8 +224,8 @@
                 </li>
               </ul>
 
-              <br><br><br>
-              <input type="submit" value="Submit" class="btn btn-primary">
+              <br>
+              <input type="submit" value="Show me courses >" class="btn btn-primary">
             </form>
           </div>
         </div>

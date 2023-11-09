@@ -144,22 +144,39 @@ def check_credentials(student_number, password):
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
-      query = text("INSERT INTO r_users (marketing, economics, management, sustainability, biology, politics, law, communication, Bachelor, Master) "
-                   "VALUES (:marketing, :economics, :management, :sustainability, :biology, :politics, :law, :communication, :Bachelor, :Master)")
+      query = text("INSERT INTO r_users (manamgement, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language, Bachelor, Master) "
+                   "VALUES (:manamgement, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language,  :Bachelor, :Master)")
 
       # Construct the parameter dictionary
       params = {
-          'marketing': data.get('marketing'),
-          'economics': data.get('economics'),
-          'management': data.get('management'),
-          'sustainability': data.get('sustainability'),
-          'biology': data.get('biology'),
-          'politics': data.get('politics'),
-          'law': data.get('law'),
-          'communication': data.get('communication'),
-          'Bachelor': data.get('Bachelor'),
-          'Master': data.get('Master')
-      }
+            'management': data.get('management'),
+            'data':data.get('data'),
+            'law': data.get('law'),
+            'businesses': data.get('businesses'),
+            'psychology': data.get('psychology'),
+            'economics': data.get('economics'),
+            'statistics': data.get('statistics'),
+            'finance': data.get('finance'),
+            'philosophy': data.get('philosophy'),
+            'sociology': data.get('sociology'),
+            'entrepreneurship': data.get('entrepreneurship'),
+            'marketing': data.get('marketing'),
+            'accounting': data.get('accounting'),
+            'econometrics': data.get('econometrics'),
+            'media': data.get('media'),
+            'ethics': data.get('ethics'),
+            'programming': data.get('programming'),
+            'health': data.get('health'),
+            'society': data.get('society'),
+            'technology': data.get('technology'),
+            'communication': data.get('communication'),
+            'history': data.get('history'),
+            'culture': data.get('culture'),
+            'language': data.get('language'),
+            'Bachelor': data.get('Bachelor'),
+            'Master': data.get('Master'),
+        }
+      
 
       conn.execute(query, params)
 
@@ -168,28 +185,60 @@ def update_interests(student_number, password, data):
   with engine.connect() as conn:
       query = text(
           "UPDATE r_users SET "
-          "marketing = :marketing, "
-          "economics = :economics, "
           "management = :management, "
-          "sustainability = :sustainability, "
-          "biology = :biology, "
-          "politics = :politics, "
+          "data = :data, "
           "law = :law, "
+          "businesses = :businesses, "
+          "psychology = :psychology, "
+          "economics = :economics, "
+          "statistics = :statistics, "
+          "finance = :finance, "
+          "philosophy = :philosophy, "
+          "sociology = :sociology, "
+          "entrepreneurship = :entrepreneurship, "
+          "marketing = :marketing, "
+          "accounting = :accounting, "
+          "econometrics = :econometrics, "
+          "media = :media, "
+          "ethics = :ethics, "
+          "programming = :programming, "
+          "health = :health, "
+          "society = :society, "
+          "technology = :technology, "
           "communication = :communication, "
+          "history = :history, "
+          "culture = :culture, "
+          "language = :language, "
           "Bachelor = :Bachelor, "
           "Master = :Master "
               "WHERE student_number = :student_number AND password = :password"
           )
 # Add student_number and password to the parameter dictionary
       params = {
-          'marketing': data.get('marketing'),
-          'economics': data.get('economics'),
           'management': data.get('management'),
-          'sustainability': data.get('sustainability'),
-          'biology': data.get('biology'),
-          'politics': data.get('politics'),
+          'data':data.get('data'),
           'law': data.get('law'),
+          'businesses': data.get('businesses'),
+          'psychology': data.get('psychology'),
+          'economics': data.get('economics'),
+          'statistics': data.get('statistics'),
+          'finance': data.get('finance'),
+          'philosophy': data.get('philosophy'),
+          'sociology': data.get('sociology'),
+          'entrepreneurship': data.get('entrepreneurship'),
+          'marketing': data.get('marketing'),
+          'accounting': data.get('accounting'),
+          'econometrics': data.get('econometrics'),
+          'media': data.get('media'),
+          'ethics': data.get('ethics'),
+          'programming': data.get('programming'),
+          'health': data.get('health'),
+          'society': data.get('society'),
+          'technology': data.get('technology'),
           'communication': data.get('communication'),
+          'history': data.get('history'),
+          'culture': data.get('culture'),
+          'language': data.get('language'),
           'Bachelor': data.get('Bachelor'),
           'Master': data.get('Master'),
           'student_number': student_number,
@@ -242,8 +291,6 @@ def get_ratings_from_database(student_number):
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
-student_number = 'sql@sql.nl'
-ratings = get_ratings_from_database(student_number)
 
 
 
@@ -266,9 +313,6 @@ def get_recommendations_with_ratings(student_number):
   return recommendations
 
 
-student_number = 'sql@sql.nl'
-recommendations = get_recommendations(student_number)
-recommendations = get_recommendations_with_ratings(student_number)
 
 
 
@@ -278,151 +322,6 @@ recommendations = get_recommendations_with_ratings(student_number)
 
 
 
-
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-import os
-from sqlalchemy import create_engine, Column, String
-from sqlalchemy import Column, String, Integer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import numpy as np
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
-import pandas as pd
-import os
-from sqlalchemy import create_engine, text
-
-db_connection_string = os.environ['DB_CONNECTION_STRING']
-
-engine = create_engine(
-  db_connection_string,
-  connect_args={
-    "ssl": {
-      "ssl_ca": "/etc/ssl/cert.pem"
-    }
-  }
-)
-
-
-
-Base = declarative_base()
-
-class Cinfo(Base):
-  __tablename__ = 'r_courses'  # Replace with your actual table name
-
-  content = Column(String, primary_key=True)
-  course_code = Column(String, primary_key=True)
-  course_name = Column(String, primary_key=True)
-
-Session = sessionmaker(bind=engine)
-session = Session() 
-
-# Fetch data from the r_views table
-course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_name).all()
-
-course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_title'])
-
-# Create indices
-indices = pd.Series(course_contents_df.index, index=course_contents_df['course_code']).drop_duplicates()
-
-# Now you can access indices using course code
-
-
-# Close the session
-session.close()
-
-Base = declarative_base()
-
-class Cint(Base):
-    __tablename__ = 'r_users'  # Replace with your actual table name
-
-    student_number = Column(String, primary_key=True)
-    marketing = Column(String)
-    economics = Column(String)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# Assuming you have your tfidf_matrix and course_content_matrix defined
-
-# Fetch data from the r_users table
-course_interests = session.query(Cint.student_number, Cint.marketing, Cint.economics).all()
-
-
-
-user_interests_list = [
-    {'student_number': student_number, 'user_interests': {'marketing': 1 if marketing == 'on' else 0, 'economics': 1 if economics == 'on' else 0}}
-    for student_number, marketing, economics in course_interests
-]
-
-
-
-course_contents = [row[0] for row in course_contents]
-tfidf_vectorizer = TfidfVectorizer()
-course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
-
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-
-# Assuming you have your tfidf_matrix and course_content_matrix defined
-
-
-
-
-
-
-import pandas as pd
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-
-def get_course_recommendations(student_number):
-  user_interest_vector = None
-
-  # Find the user_interest_vector for the specified student_number
-  for user_interest in user_interests_list:
-    interests = user_interest['user_interests']
-    
-
-    user_interest_vector = [interests.get(interest, 0) for interest in tfidf_vectorizer.get_feature_names_out()]
-    
-    
-    similarities = cosine_similarity([user_interest_vector], course_content_matrix)
-
-    course_indices = similarities.argsort()[0][::-1]
-
-    
-    # Recommend the top N courses to the user (e.g., top 5)
-    top_n = 6
-    recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
-
-
-    student_recommendations = {
-        "student_number": student_number,
-        "recommended_courses": [
-            {
-                "course_code": course["course_code"],
-                "course_content": course["course_content"],
-                "course_title": course["course_title"],
-                "similarity_score": similarities[0, index]
-            }
-            for index, course in recommended_courses.iterrows()
-        ]
-    }
-
-
-
-
-  
-    # Display or use the recommended courses
-  return student_recommendations
 
 
 
