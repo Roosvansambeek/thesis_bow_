@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_favorite_courses_from_db, add_interests_to_db, add_login_to_db, check_credentials, update_interests, add_views_to_db, put_rating_to_db, add_test_to_db, get_test_from_db, load_best_courses_with_favorite_from_db
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database
 from flask import request, redirect, url_for, flash
 from datetime import datetime
+from algorithm import get_recommendations
+
 
 app = Flask(__name__)
 
@@ -61,16 +63,6 @@ def stated_interests():
     previous_page = request.referrer
     return redirect(f'/home/{student_number}')
 
-@app.route("/test", methods=['GET', 'POST'])
-def test():
-    favorite_value = get_test_from_db()
-    data = request.form
-
-    if request.method == 'POST' and 'favorite' in data:
-        add_test_to_db(data)
-
-    return render_template('test.html', favorite=favorite_value)
-
 
 @app.route("/home/<student_number>", methods=['GET', 'POST'])
 def home(student_number):
@@ -81,7 +73,7 @@ def home(student_number):
     carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
     best_courses = load_best_courses_with_favorite_from_db(student_number)
-    
+    recommendations =get_recommendations(student_number)
 
     data = request.form  # Moved the data assignment here
 
@@ -101,7 +93,11 @@ def home(student_number):
         # Update the best_courses here after the change
         best_courses = load_best_courses_with_favorite_from_db(student_number)
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses)
+        recommendations = get_recommendations_with_ratings(student_number)
+        
+
+
+    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, recommendations=recommendations)
 
 
 
@@ -141,7 +137,7 @@ def show_course(student_number, course_code):
     print(course_code)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    add_views_to_db(student_number, course_code, timestamp)
+    add_views_to_db(student_number, course_code, timestamp, id)
 
     return render_template('coursepage.html', course=course[0])
 

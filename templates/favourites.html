@@ -154,7 +154,7 @@
     {% else %}
       {% for favorite_course in favorite_courses %}
             <div class="col-12">
-              <a href="/course/{{favorite_course['course_code']}}" target="_blank" class="card">
+              <a href="/course/{{favorite_course['course_code']}}/{{'student_number'}}" target="_blank" class="card">
                 <div class="card-body">
                   <div class="course-header">
                     <h5 class="card-title"><b>{{ favorite_course['course_name'] }}</b></h5>{% include 'star_favorite.html' %}
