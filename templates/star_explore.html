@@ -1,7 +1,7 @@
 <form action='/home/{{ student_number }}' method="post">
     <label>
-        <input type="checkbox" name="rating" {% if explore_course['rating'] == 'on' %} checked {% endif %}>
-        <input type="hidden" name="course_code" value="{{ explore_course['course_code'] }}">
+        <input type="checkbox" name="rating" {% if recommended_course['liked'] == 'on' %} checked {% endif %}>
+        <input type="hidden" name="course_code" value="{{ recommended_course['course_code'] }}">
     </label>
     <input type="submit" value="Save">
 </form>
