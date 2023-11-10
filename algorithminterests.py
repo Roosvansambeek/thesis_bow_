@@ -165,3 +165,33 @@ def get_course_recommendations(student_number):
   return student_recommendations
 
 
+def get_ratings_from_database(student_number):
+  with engine.connect() as conn:
+      query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
+      result = conn.execute(query, {"student_number": student_number})
+
+      # Create a dictionary to store the ratings for each course
+      ratings = {row.course_code: row.rating for row in result}
+  return ratings
+
+
+
+
+def get_recommendations_interests_with_ratings(student_number):
+  recommendations = get_course_recommendations(student_number)  # Retrieve recommended courses as before
+  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
+  print(rated_courses)
+
+  for recommendation_set in recommendations['recommended_courses']:
+    course_code = recommendation_set['course_code']  # Access 'course_code' within the nested structure
+          # Check if there is a rating for the current course in the rated_courses list
+    if course_code in rated_courses:
+        recommendation_set['rating'] = rated_courses[course_code]
+        print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+    else:
+              # If no rating found, assume 'off'
+      recommendation_set['rating'] = 'off'
+
+
+  return recommendations
+
