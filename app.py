@@ -1,9 +1,24 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, get_recommendations_with_ratings, get_ratings_from_database
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db
 from flask import request, redirect, url_for, flash
 from datetime import datetime
-from algorithm import get_recommendations
-from algorithminterests import get_course_recommendations, get_recommendations_interests_with_ratings, get_ratings_from_database
+
+
+#TFIDF
+#fav
+from TFIDF_algorithmfav import get_recommendations_fav_TFIDF, get_recommendations_fav_with_ratings_TFIDF
+
+#int
+from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF, get_recommendations_interests_with_ratings_TFIDF
+
+#BOW
+#fave
+from BOW_algorithmfav import get_recommendations_fav_BOW, get_recommendations_with_ratings_BOW
+
+#int
+from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW
+
+
 
 
 app = Flask(__name__)
@@ -16,6 +31,7 @@ filters = {
 
 @app.route("/")
 def landing():
+  
     return render_template('welcome.html')
 
 app.secret_key = 'session_key'
@@ -74,11 +90,10 @@ def home(student_number):
     # Rest of your code
     carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
-    best_courses = load_best_courses_with_favorite_from_db(student_number)
-    recommendations = get_recommendations(student_number)
-    print(recommendations)
-    interests_recommendations = get_course_recommendations(student_number)
-    print(interests_recommendations)
+    fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
+    interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
+    
+    
   
     data = request.form  # Moved the data assignment here
 
@@ -95,16 +110,15 @@ def home(student_number):
             # Implement the code to update the database with 'on'
             add_test_to_db(request, student_number, course_code, 'off')
 
-        # Update the best_courses here after the change
-        best_courses = load_best_courses_with_favorite_from_db(student_number)
+        # Update the checkboxes here after the change
 
-        recommendations = get_recommendations_with_ratings(student_number)
+        fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
 
-        interests_recommendations = get_recommendations_interests_with_ratings(student_number)
-        print(interests_recommendations)
+        interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
+  
       
 
-    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, best_courses=best_courses, recommendations=recommendations, interests_recommendations=interests_recommendations)
+    return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, fav_recommendations=fav_recommendations, interests_recommendations=interests_recommendations)
 
 
 
