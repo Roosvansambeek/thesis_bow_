@@ -1,18 +1,14 @@
-from sqlalchemy import create_engine
-from sqlalchemy import text
-from sqlalchemy.orm import sessionmaker
-import os
 
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-import os
 from sqlalchemy import create_engine, Column, String
 from sqlalchemy import Column, String, Integer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import pandas as pd
+import os
 
 
 # Rest of your code remains the same
@@ -27,9 +23,6 @@ engine = create_engine(
     }
   }
 )
-
-
-
 
 
 Base = declarative_base()
@@ -69,11 +62,11 @@ r_favo_data = session.query(Rfavo.student_number, Rfavo.course_code, Rfavo.id).f
 
 
 
-def get_recommendations(student_number):
+def get_recommendations_fav_BOW(student_number):
   # item-matrix
 
-  tfidf_vectorizer = TfidfVectorizer()
-  course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+  count_vectorizer = CountVectorizer(stop_words="english")
+  course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
   # Create a dictionary to store user profiles
   user_profiles = {}
@@ -92,8 +85,8 @@ def get_recommendations(student_number):
   for student, data in user_profiles.items():
       viewed_courses = data["viewed_courses"]
       user_profile = np.asarray(course_content_matrix[viewed_courses].sum(axis=0))
-      cosine_similarities = linear_kernel(user_profile, course_content_matrix)
-      similar_courses = list(enumerate(cosine_similarities[0]))
+      similarities = cosine_similarity(user_profile, course_content_matrix)
+      similar_courses = list(enumerate(similarities[0]))
 
       # Sort by similarity and get the top recommendations
       similar_courses = sorted(similar_courses, key=lambda x: x[1], reverse=True)
@@ -120,3 +113,37 @@ def get_recommendations(student_number):
 
 
 session.close()
+
+
+
+
+
+def get_ratings_from_database(student_number):
+  with engine.connect() as conn:
+      query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
+      result = conn.execute(query, {"student_number": student_number})
+
+      # Create a dictionary to store the ratings for each course
+      ratings = {row.course_code: row.rating for row in result}
+  return ratings
+
+
+
+
+def get_recommendations_with_ratings_BOW(student_number):
+  recommendations = get_recommendations_fav_BOW(student_number)  # Retrieve recommended courses as before
+  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
+
+  for recommendation_set in recommendations:
+      for recommendation in recommendation_set['recommended_courses']:
+          course_code = recommendation['course_code']  # Access 'course_code' within the nested structure
+          # Check if there is a rating for the current course in the rated_courses list
+          if course_code in rated_courses:
+              recommendation['liked'] = rated_courses[course_code]
+              #print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+          else:
+              # If no rating found, assume 'off'
+              recommendation['liked'] = 'off'
+
+
+  return recommendations

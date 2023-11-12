@@ -1,22 +1,13 @@
 
-
-
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
-from sqlalchemy import create_engine, Column, String
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import create_engine, Column, String, text, column, String
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 import numpy as np
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
 import pandas as pd
-import os
-from sqlalchemy import create_engine, text
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -106,27 +97,12 @@ user_interests_list = [
 
 
 course_contents = [row[0] for row in course_contents]
-tfidf_vectorizer = TfidfVectorizer()
-course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
-
-
-from sklearn.metrics.pairwise import cosine_similarity
-
-
-# Assuming you have your tfidf_matrix and course_content_matrix defined
+count_vectorizer = CountVectorizer()
+course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
 
 
-
-
-
-import pandas as pd
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-
-def get_course_recommendations(student_number):
+def get_course_recommendations_int_BOW(student_number):
   user_interest_vector = None
 
   # Find the user_interest_vector for the specified student_number
@@ -134,7 +110,7 @@ def get_course_recommendations(student_number):
     interests = user_interest['user_interests']
 
 
-    user_interest_vector = [interests.get(interest, 0) for interest in tfidf_vectorizer.get_feature_names_out()]
+    user_interest_vector = [interests.get(interest, 0) for interest in count_vectorizer.get_feature_names_out()]
 
 
     similarities = cosine_similarity([user_interest_vector], course_content_matrix)
@@ -165,6 +141,8 @@ def get_course_recommendations(student_number):
   return student_recommendations
 
 
+
+
 def get_ratings_from_database(student_number):
   with engine.connect() as conn:
       query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
@@ -177,8 +155,8 @@ def get_ratings_from_database(student_number):
 
 
 
-def get_recommendations_interests_with_ratings(student_number):
-  recommendations = get_course_recommendations(student_number)  # Retrieve recommended courses as before
+def get_recommendations_with_ratings_BOW(student_number):
+  recommendations = get_course_recommendations_int_BOW(student_number)  # Retrieve recommended courses as before
   rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
   print(rated_courses)
 

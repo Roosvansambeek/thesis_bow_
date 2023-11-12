@@ -1,9 +1,8 @@
 <div class="section">
   <div class="row">
-    <h3><b><span style="color: #ACBED8;">Recommended Courses</span></b></h3>
-  </div>
+  <h3><b><span style="color: #ACBED8;">Recommended Courses</span> based on your favorites!</b></h3>
   <div class="row">
-    {% for student_recommendation in recommendations %}
+    {% for student_recommendation in fav_recommendations %}
       {% for recommended_course in student_recommendation['recommended_courses'] %}
         <div class="col-4">
             <a href="/course/{{recommended_course['course_code']}}/{{student_number}}" target="_blank" class="card">
