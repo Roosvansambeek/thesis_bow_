@@ -144,8 +144,8 @@ def check_credentials(student_number, password):
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
-      query = text("INSERT INTO r_users (manamgement, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language, Bachelor, Master) "
-                   "VALUES (:manamgement, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language,  :Bachelor, :Master)")
+      query = text("INSERT INTO r_users (management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language, Bachelor, Master) "
+                   "VALUES (:management, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language,  :Bachelor, :Master)")
 
       # Construct the parameter dictionary
       params = {
