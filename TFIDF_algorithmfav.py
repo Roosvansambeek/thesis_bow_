@@ -39,30 +39,31 @@ course_contents = [row[0] for row in course_contents]
 # Close the session
 session.close()
 
-# Define the SQLAlchemy model for r_views
-Base = declarative_base()
+# item-matrix
 
-class Rfavo(Base):
-    __tablename__ = 'r_favorites4'  # Replace with your actual table name
-
-    student_number = Column(String, primary_key=True)
-    course_code = Column(String, primary_key=True)
-    rating = Column(String)  # Add the rating column to your model
-    id = Column(Integer)  # Assuming the 'id' column exists in the table
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-r_favo_data = session.query(Rfavo.student_number, Rfavo.course_code, Rfavo.id).filter(Rfavo.rating == 'on').all()
-
-
+tfidf_vectorizer = TfidfVectorizer()
+course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
 
 
 def get_recommendations_fav_TFIDF(student_number):
-  # item-matrix
 
-  tfidf_vectorizer = TfidfVectorizer()
-  course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+  # Define the SQLAlchemy model for r_views
+  Base = declarative_base()
+  
+  class Rfavo(Base):
+      __tablename__ = 'r_favorites4'  # Replace with your actual table name
+  
+      student_number = Column(String, primary_key=True)
+      course_code = Column(String, primary_key=True)
+      rating = Column(String)  # Add the rating column to your model
+      id = Column(Integer)  # Assuming the 'id' column exists in the table
+  
+  Session = sessionmaker(bind=engine)
+  session = Session()
+  
+  r_favo_data = session.query(Rfavo.student_number, Rfavo.course_code, Rfavo.id).filter(Rfavo.rating == 'on').all()
+
+
 
   # Create a dictionary to store user profiles
   user_profiles = {}

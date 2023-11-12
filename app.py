@@ -6,10 +6,11 @@ from datetime import datetime
 
 #TFIDF
 #fav
-from TFIDF_algorithmfav import get_recommendations_fav_TFIDF, get_recommendations_fav_with_ratings_TFIDF
+from TFIDF_algorithmfav import get_recommendations_fav_TFIDF,get_recommendations_fav_with_ratings_TFIDF
 
 #int
 from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF, get_recommendations_interests_with_ratings_TFIDF
+
 
 #BOW
 #fave
@@ -29,39 +30,27 @@ filters = {
     'Block': [1, 2, 3, 4]
 }
 
+
 @app.route("/")
 def landing():
-  
-    return render_template('welcome.html')
+    return render_template('signin.html')
 
 app.secret_key = 'session_key'
-
-@app.route("/inlogpage", methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        student_number = request.form['student_number']
-        password = request.form['password']
-
-        if check_credentials(student_number, password):
-            session['student_number'] = student_number
-            session['password'] = password
-            return render_template('state_interests.html')
-        else:
-            return render_template('inlogpage.html')
-    return render_template('inlogpage.html')
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
     if request.method == 'POST':
         student_number = request.form['student_number']
+        session['student_number'] = student_number
         password = request.form['password']
+        session['password'] = password
         level = request.form['level']
         education = request.form['education']
-          
+
         add_login_to_db(student_number, password, level, education)
-        
-        return redirect('/inlogpage')
-        
+
+        return redirect('/state_interests.html')
+
     return render_template('signin.html')
 
 @app.route("/state_interests.html")
@@ -72,8 +61,10 @@ def state_interests():
 def stated_interests():
     data = request.form
     student_number = session.get('student_number')  
+    print(student_number)
     password = session.get('password') 
-
+    print(password)
+  
     if student_number and password:
         update_interests(student_number, password, data)
 
@@ -81,20 +72,18 @@ def stated_interests():
     return redirect(f'/home/{student_number}')
 
 
+
 @app.route("/home/<student_number>", methods=['GET', 'POST'])
 def home(student_number):
     # Access the student_number from the URL and the session
     student_number = student_number or session.get('student_number', default_value)
-    print(student_number)
-
+    print('student_number:', student_number)
     # Rest of your code
     carousel_courses = load_carousel_courses_from_db(student_number)
     num_carousel_courses = len(carousel_courses)
     fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
     interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
-    
-    
-  
+
     data = request.form  # Moved the data assignment here
 
     if request.method == 'POST':
@@ -115,13 +104,14 @@ def home(student_number):
         fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
 
         interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
-  
-      
+
+
 
     return render_template('home.html', student_number=student_number, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, fav_recommendations=fav_recommendations, interests_recommendations=interests_recommendations)
 
 
 
+  
 @app.route('/favourites/<student_number>')
 def favorite_courses(student_number):
     # The student_number parameter should be included in the function signature
