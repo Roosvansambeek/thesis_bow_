@@ -28,6 +28,7 @@ def load_courses_from_db():
     return courses
 
 
+
 def load_carousel_courses_from_db(student_number):
   with engine.connect() as conn:
       query = text("""
@@ -126,12 +127,30 @@ def load_favorite_courses_from_db(student_number):
           favorite_courses.append(result_dict)
       return favorite_courses
 
+def load_viewed_courses_from_db(student_number):
+  with engine.connect() as conn:
+      query = text("""
+          SELECT r_courses.course_code, r_courses.course_name, r_courses.content
+          FROM r_views
+          INNER JOIN r_courses ON r_views.course_code = r_courses.course_code
+          WHERE r_views.student_number = :student_number
+      """)
 
-def add_login_to_db(student_number, password, level, education):
+      result = conn.execute(query, {"student_number": student_number})
+
+      viewed_courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          viewed_courses.append(result_dict)
+      return viewed_courses
+
+
+def add_login_to_db(student_number, level, education):
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO r_users (student_number, password, level, education) VALUES (:student_number, :password, :level, :education)"),
-          {"student_number": student_number, "password": password, "level": level, "education": education}
+          text("INSERT INTO r_users (student_number, level, education) VALUES (:student_number, :level, :education)"),
+          {"student_number": student_number, "level": level, "education": education}
       )
 
 def check_credentials(student_number, password):
@@ -181,7 +200,7 @@ def add_interests_to_db(data):
       conn.execute(query, params)
 
 
-def update_interests(student_number, password, data):
+def update_interests(student_number, data):
   with engine.connect() as conn:
       query = text(
           "UPDATE r_users SET "
@@ -211,7 +230,7 @@ def update_interests(student_number, password, data):
           "language = :language, "
           "Bachelor = :Bachelor, "
           "Master = :Master "
-              "WHERE student_number = :student_number AND password = :password"
+              "WHERE student_number = :student_number "
           )
 # Add student_number and password to the parameter dictionary
       params = {
@@ -241,8 +260,7 @@ def update_interests(student_number, password, data):
           'language': data.get('language'),
           'Bachelor': data.get('Bachelor'),
           'Master': data.get('Master'),
-          'student_number': student_number,
-          'password': password
+          'student_number': student_number
       }
 
       conn.execute(query, params)
@@ -271,25 +289,18 @@ def add_views_to_db(student_number, course_code, timestamp, id):
           query = text("INSERT INTO r_views (course_code, student_number, timestamp, id) VALUES (:course_code, :student_number, :timestamp, :id)")
           conn.execute(query, {"course_code": course_code, "student_number": student_number, "timestamp": timestamp, "id": course_info_id})
 
-     
-
-
-
-      
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
+def search_courses_from_db(query):
+  with engine.connect() as conn:
+      result = conn.execute(
+               text("SELECT * FROM r_courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query"),
+               {"query": "%" + query + "%"}
+           )
+      courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          courses.append(result_dict)
+      return courses
 
 
 

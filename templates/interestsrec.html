@@ -5,7 +5,7 @@
   <div class="row">
     {% for recommendation in interests_recommendations['recommended_courses'] %}
       <div class="col-4">
-              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" target="_blank" class="card">
+              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" class="card">
               <div class="card-body">
                 <div class="course-header">
                   <h5 class="card-title"><b>{{ recommendation['course_title'] }}</b></h5>

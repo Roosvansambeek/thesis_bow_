@@ -55,7 +55,7 @@
 <nav class="navbar navbar-expand-md fixed-top">
   <div class="navbar-content">
       <div class="col-6 left">
-         <a href="/home">
+         <a href="/home/{{student_number}}">
           <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png">
          </a>
       </div>
@@ -69,13 +69,14 @@
                   <a class="custom-text" href="/courses/{{student_number}}"><i class="fa-solid fa-book" style="color: #000000;"></i><b>Courses</b></a>
               </li>
               <li class="nav-item">
-                  <a class="custom-text" href="/favourites/{{student_number}}"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favourites</b></a>
+                  <a class="custom-text" href="/favourites/{{student_number}}"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Saved</b></a>
               </li>
           </ul>
-          <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex" role="search" action="/search" method="get">
+              <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
               <button class="btn btn-primary custom-btn" type="submit">Search</button>
           </form>
+        </body>
           <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="custom-text" href="/"><i class="fa-solid fa-circle-user fa-2xl" style="color: #000000;"></i></a>

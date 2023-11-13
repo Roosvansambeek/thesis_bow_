@@ -1,4 +1,3 @@
-
 from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -50,34 +49,11 @@ session.close()
 
 Base = declarative_base()
 
-class Cint(Base):
+class Cedu(Base):
     __tablename__ = 'r_users'  # Replace with your actual table name
 
     student_number = Column(String, primary_key=True)
-    management = Column(String)
-    data = Column(String)
-    law = Column(String)
-    businesses = Column(String)
-    psychology = Column(String)
-    economics = Column(String)
-    statistics = Column(String)
-    finance = Column(String)
-    philosophy = Column(String)
-    sociology = Column(String)
-    entrepreneurship = Column(String)
-    marketing = Column(String)
-    accounting = Column(String)
-    econometrics = Column(String)
-    media = Column(String)
-    ethics = Column(String)
-    programming = Column(String)
-    health = Column(String)
-    society = Column(String)
-    technology = Column(String)
-    communication = Column(String)
-    history = Column(String)
-    culture = Column(String)
-    language = Column(String)
+    education = Column(String, primary_key=True)
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -85,41 +61,39 @@ session = Session()
 # Assuming you have your tfidf_matrix and course_content_matrix defined
 
 # Fetch data from the r_users table
-course_interests = session.query(Cint.student_number, Cint.management, Cint.data, Cint.law, Cint.businesses, Cint.psychology, Cint.economics, Cint.statistics, Cint.finance, Cint.philosophy, Cint.sociology, Cint.entrepreneurship, Cint.marketing, Cint.accounting, Cint.econometrics, Cint.media, Cint.ethics, Cint.programming, Cint.health, Cint.society, Cint.technology, Cint.communication, Cint.history, Cint.culture, Cint.language).all()
+education_list = session.query(Cedu.student_number, Cedu.education).all()
 
-
-
-user_interests_list = [
-    {'student_number': student_number, 'user_interests': {'management': 1 if management == 'on' else 0, 'data': 1 if data == 'on' else 0, 'law': 1 if law == 'on' else 0, 'businesses': 1 if businesses == 'on' else 0, 'psychology': 1 if psychology == 'on' else 0, 'economics': 1 if economics == 'on' else 0, 'statistics': 1 if statistics == 'on' else 0, 'finance': 1 if finance == 'on' else 0, 'philosophy': 1 if philosophy == 'on' else 0, 'sociology': 1 if sociology == 'on' else 0, 'entrepreneurship': 1 if entrepreneurship == 'on' else 0, 'marketing': 1 if marketing == 'on' else 0, 'accounting': 1 if accounting == 'on' else 0, 'econometrics': 1 if econometrics == 'on' else 0, 'media': 1 if media == 'on' else 0, 'ethics': 1 if ethics == 'on' else 0, 'programming': 1 if programming == 'on' else 0, 'health': 1 if health == 'on' else 0, 'society': 1 if society == 'on' else 0, 'technology': 1 if technology == 'on' else 0, 'communication': 1 if communication == 'on' else 0, 'history': 1 if history == 'on' else 0, 'culture': 1 if culture == 'on' else 0, 'language': 1 if language == 'on' else 0}}
-    for student_number, management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language in course_interests
-]
-
-
+user_education_list = [
+  {'student_number': student_number, 'user_education': education}
+    for student_number, education in education_list
+  ]
 
 course_contents = [row[0] for row in course_contents]
 count_vectorizer = CountVectorizer()
 course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
+def recs_on_education_BOW(student_number):
+    education_dict = {}
 
+    # Find the user_interest_vector for the specified student_number
+    for user in user_education_list:
+        education_terms = user['user_education'].split()  # Split the string into terms
 
-def get_course_recommendations_int_BOW(student_number):
-  user_interest_vector = None
+        # Update the dictionary with terms from each user's education
+        for term in education_terms:
+            # Cap the count of each term at 1
+            if term not in education_dict:
+                education_dict[term] = 1
 
-  # Find the user_interest_vector for the specified student_number
-  for user_interest in user_interests_list:
-    interests = user_interest['user_interests']
-    print('user_intsss', interests)
+    user_education_vector = [education_dict.get(edu, 0) for edu in count_vectorizer.get_feature_names_out()]
+    print('edu_intsss', education_dict)
 
-
-    user_interest_vector = [interests.get(interest, 0) for interest in count_vectorizer.get_feature_names_out()]
-
-
-    similarities = cosine_similarity([user_interest_vector], course_content_matrix)
+    similarities = cosine_similarity([user_education_vector], course_content_matrix)
 
     course_indices = similarities.argsort()[0][::-1]
 
 
-    # Recommend the top N courses to the user (e.g., top 5)
+      # Recommend the top N courses to the user (e.g., top 5)
     top_n = 6
     recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
 
@@ -138,8 +112,8 @@ def get_course_recommendations_int_BOW(student_number):
     }
 
 
-    # Display or use the recommended courses
-  return student_recommendations
+      # Display or use the recommended courses
+    return student_recommendations
 
 
 
@@ -156,8 +130,8 @@ def get_ratings_from_database(student_number):
 
 
 
-def get_recommendations_with_ratings_BOW(student_number):
-  recommendations = get_course_recommendations_int_BOW(student_number)  # Retrieve recommended courses as before
+def get_recommendations_edu_with_ratings_BOW(student_number):
+  recommendations = recs_on_education_BOW(student_number)  # Retrieve recommended courses as before
   rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
   print(rated_courses)
 
@@ -173,4 +147,7 @@ def get_recommendations_with_ratings_BOW(student_number):
 
 
   return recommendations
+
+
+
 
