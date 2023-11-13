@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Home page</title>
-    {% include 'bootstrap.html' %}
-</head>
+  <head>
+      <title>Home Page</title>
+      {% include 'bootstrap.html' %}
+      <!-- Your other CSS and scripts -->
+
+  </head>
 <style>
   body {
     margin-top: 5px;
@@ -145,10 +147,10 @@
 </style>
 <body>
   {% include 'navbar.html' %}
-  {% include 'carousel.html' %}
+  {% include 'carousel_edu.html' %}
   {% include 'interestsrec.html' %}
-  {% include 'interestsfav.html' %}
+  {% include 'favrec.html' %}
+  {% include 'viewed.html' %}
   
-</body>
 {% include 'footer.html' %}
 </html>

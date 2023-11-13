@@ -12,9 +12,11 @@
   </style>
   <title>Tilburg University Course Catalogue</title>
   {% include 'bootstrap.html' %}
+  
 </head>
 <body>
   {% include 'navbar.html' %}
+  
   <div class="container">
     <div class="row mt-4">
       <div class="col">
@@ -25,7 +27,9 @@
         <p>{{ course['aims'] }}</p>
       </div>
     </div>
-
+    <br><br>
+    {% include 'edurec.html' %}
+    
     {% include 'footer.html' %}
   </div>
 </body>

@@ -1,8 +1,0 @@
-<form action='/home/{{ student_number }}' method="post">
-    <label>
-        <input type="checkbox" name="rating" {% if carousel_course['rating'] == 'on' %} checked {% endif %}>
-        <input type="hidden" name="course_code" value="{{ carousel_course['course_code'] }}">
-    </label>
-    <input type="submit" value="Save">
-</form>
-
