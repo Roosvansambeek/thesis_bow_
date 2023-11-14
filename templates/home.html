@@ -23,19 +23,21 @@
   }
 
   .custom-crd {
-    background-color: #F2D398;
-    border: 2px solid #986B23;
-    color: black;
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 0;             /* ensure no margin */
-    height: 40px;          /* ensure height fits content */
+      background-color: #F2D398;
+      border: 2px solid #986B23;
+      color: black;
+      display: inline-block;
+      width: 394px;  /* set the width */
+      height: 244px; /* set the height */
+      overflow: hidden; /* prevent content overflow */
+      margin: 10px;  /* add margin if needed */
   }
 
   .custom-crd .card-body {
-    padding: 0;            /* remove padding from the card body */
-    margin: 0;             /* ensure no margin */
+      padding: 10px; /* adjust padding as needed */
+      box-sizing: border-box; /* include padding in the width and height */
   }
+
 
   .custom-crd {
     transition: all 0.3s ease;
