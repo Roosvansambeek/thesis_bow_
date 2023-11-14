@@ -6,7 +6,7 @@
     {% if viewed_courses %}
       {% for v_course in viewed_courses[:12] %}
         <div class="col-4">
-          <a href="/course/{{v_course['course_code']}}/{{student_number}}" class="card">
+          <a href="/course/{{v_course['course_code']}}/{{student_number}}" class="card" style="width: 394px; height: 260px;">
             <div class="card-body">
                   <div class="course-header">
                     <h5 class="card-title"><b>{{ v_course['course_name'] }}</b></h5>
@@ -19,9 +19,12 @@
                       {{ v_course['content'] }}
                     {% endif %}
                   </p>
-                  <div class="star-button">
-                    {% include 'star_viewed.html' %}
-                  </div>
+                    <div class="star-button" style="position: absolute;
+                      bottom: 0;
+                      right: 0;
+                      margin: 10px;" >
+                        {% include 'star_viewed.html' %}
+                    </div>
                 </div>
               </a>
         </div>

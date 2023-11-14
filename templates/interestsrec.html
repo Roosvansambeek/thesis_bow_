@@ -5,7 +5,7 @@
   <div class="row">
     {% for recommendation in interests_recommendations['recommended_courses'][:6] %}
       <div class="col-4">
-              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" class="card">
+              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" class="card" style="width: 394px; height: 260px;">
               <div class="card-body">
                 <div class="course-header">
                   <h5 class="card-title"><b>{{ recommendation['course_title'] }}</b></h5>
@@ -18,8 +18,11 @@
                       {{ recommendation['course_content'] }}
                     {% endif %}
                   </p>
-                <div class="star-button">
-                  {% include 'star_compulsory.html' %}
+                <div class="star-button" style="position: absolute;
+                  bottom: 0;
+                  right: 0;
+                  margin: 10px;" >
+                    {% include 'star_compulsory.html' %}
                 </div>
               </div>
             </a>
