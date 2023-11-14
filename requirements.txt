@@ -3,3 +3,4 @@ gunicorn
 sqlalchemy
 pymysql
 scikit-learn
+pandas
