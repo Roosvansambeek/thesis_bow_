@@ -6,13 +6,13 @@ from datetime import datetime
 
 #TFIDF
 #fav
-from TFIDF_algorithmfav import get_recommendations_fav_TFIDF,get_recommendations_fav_with_ratings_TFIDF
+from TFIDF_algorithmfav import get_recommendations_fav_level_TFIDF, get_recommendations_fav_with_ratings_TFIDF
 
 #int
-from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF, get_recommendations_interests_with_ratings_TFIDF
+from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF, get_recommendations_level_TFIDF, get_recommendations_with_ratings_TFIDF
 
 #edu
-from TFIDF_education import recs_on_education_TFIDF, get_recommendations_edu_with_ratings_TFIDF 
+from TFIDF_education import get_recommendations_edu_level_TFIDF 
 
 #course
 from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
@@ -22,7 +22,7 @@ from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
 from BOW_algorithmfav import get_recommendations_fav_BOW, get_recommendations_with_ratings_BOW
 
 #int
-from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW
+from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW, get_recommendations_level_BOW
 
 #edu
 from BOW_education import recs_on_education_BOW, get_recommendations_edu_with_ratings_BOW 
@@ -68,7 +68,7 @@ def state_interests():
 def stated_interests():
     data = request.form
     student_number = session.get('student_number')  
-    print(student_number)
+    
   
     if student_number:
         update_interests(student_number, data)
@@ -80,38 +80,35 @@ def stated_interests():
 
 @app.route("/home/<student_number>", methods=['GET', 'POST'])
 def home(student_number):
-    # Access the student_number from the URL and the session
+   
     student_number = student_number or session.get('student_number', default_value)
-    print('student_number:', student_number)
-    # Rest of your code
-    education_recommendations = get_recommendations_edu_with_ratings_TFIDF(student_number)
+    
+    education_recommendations = get_recommendations_edu_level_TFIDF(student_number)
     num_education_recommendations=len(education_recommendations)
     fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
-    interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
+    interests_recommendations = get_recommendations_level_TFIDF(student_number)
     viewed_courses=load_viewed_courses_from_db(student_number)
 
-    data = request.form  # Moved the data assignment here
+    data = request.form  
 
     if request.method == 'POST':
         rating = request.form.get('rating')
         course_code = request.form.get('course_code')
 
         if rating == 'on':
-            # Update the database with 'off' status
-            # Implement the code to update the database with 'off'
+           
             add_test_to_db(request, student_number, course_code, 'on')
         else:
-            # Update the database with 'on' status
-            # Implement the code to update the database with 'on'
+           
             add_test_to_db(request, student_number, course_code, 'off')
 
-        # Update the checkboxes here after the change
+       
 
         fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
 
-        interests_recommendations = get_recommendations_interests_with_ratings_TFIDF(student_number)
+        interests_recommendations = get_recommendations_level_TFIDF(student_number)
 
-        education_recommendations = get_recommendations_edu_with_ratings_TFIDF(student_number)
+        education_recommendations = get_recommendations_edu_level_TFIDF(student_number)
 
         viewed_courses=load_viewed_courses_from_db(student_number)
 
@@ -124,7 +121,6 @@ def home(student_number):
   
 @app.route('/favourites/<student_number>')
 def favorite_courses(student_number):
-    # The student_number parameter should be included in the function signature
     favorite_courses = load_favorite_courses_from_db(student_number)
     return render_template('favourites.html', favorite_courses=favorite_courses, student_number=student_number)
 
@@ -135,16 +131,6 @@ def hello_world(student_number):
     return render_template('courses.html', courses=courses, filters=filters, student_number=student_number)
 
 
-@app.route("/welcome")
-def welcome():
-    return render_template('welcome.html')
-
-@app.route("/api/courses/<student_number>")
-def list_courses():
-  courses = load_courses_from_db()
-  student_number = session.get('student_number')
-  return jsonify(courses, student_number=student_number)
-
 
 @app.route("/course/<course_code>/<student_number>")
 def show_course(student_number, course_code):
@@ -152,15 +138,13 @@ def show_course(student_number, course_code):
     courses = load_courses_from_db()
     viewed_courses=load_viewed_courses_from_db(student_number)
     course_code = request.view_args['course_code']
-    print(course_code)
     recommendations_courses = get_recommendations_course_TFIDF(course_code)
     course = [course for course in courses if course.get('course_code') == course_code]
 
     if not course:
         return "Not Found", 404
 
-    print(student_number)
-    print(course_code)
+    
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     add_views_to_db(student_number, course_code, timestamp, id)

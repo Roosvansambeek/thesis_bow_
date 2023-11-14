@@ -2,7 +2,7 @@
     <div class="row">
         <div id="carouselExampleCaptions" class="carousel slide col-12">
             <div class="carousel-indicators">
-                {% for edu_rec in education_recommendations['recommended_courses'] %}
+                {% for edu_rec in education_recommendations['recommended_courses']%}
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ loop.index + 1 }}"></button>
                 {% endfor %}
             </div>
@@ -14,9 +14,7 @@
                         <div class="carousel-card-body">
                             <div class="course-header">
                                 <h5 class="card-title"><b>{{ edu_rec['course_title'] }}</b></h5>
-                                <div class="star-button">
-                                    {% include 'star_education.html' %}
-                                </div>
+                                
                             </div>
                             <p class="course-details">
                                 {% if edu_rec['course_content'] | length > 500 %}
@@ -25,6 +23,9 @@
                                 {{ edu_rec['course_content'] }}
                                 {% endif %}
                             </p>
+                          <div class="star-button">
+                              {% include 'star_education.html' %}
+                          </div>
                         </div>
                     </a>
                 </div>
