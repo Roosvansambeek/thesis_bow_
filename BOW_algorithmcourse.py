@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 from sqlalchemy import create_engine, text
 
-# Rest of your code...
+
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -21,13 +21,13 @@ engine = create_engine(
   }
 )
 
-CountVectorizer = CountVectorizer()
+CountVectorizer = CountVectorizer(stop_words='english')
 
 def get_recommendations_course_BOW(course_code):
     Base = declarative_base()
     
     class Cinfo(Base):
-        __tablename__ = 'r_courses'  # Replace with your actual table name
+        __tablename__ = 'r_courses'  
     
         content = Column(String, primary_key=True)
         course_code = Column(String, primary_key=True)

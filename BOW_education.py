@@ -24,7 +24,7 @@ engine = create_engine(
 Base = declarative_base()
 
 class Cinfo(Base):
-  __tablename__ = 'r_courses'  # Replace with your actual table name
+  __tablename__ = 'r_courses' 
 
   content = Column(String, primary_key=True)
   course_code = Column(String, primary_key=True)
@@ -41,38 +41,40 @@ course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'c
 # Create indices
 indices = pd.Series(course_contents_df.index, index=course_contents_df['course_code']).drop_duplicates()
 
-# Now you can access indices using course code
 
+course_contents = [row[0] for row in course_contents]
+count_vectorizer = CountVectorizer(stop_words='english')
+course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
 # Close the session
 session.close()
 
-Base = declarative_base()
-
-class Cedu(Base):
-    __tablename__ = 'r_users'  # Replace with your actual table name
-
-    student_number = Column(String, primary_key=True)
-    education = Column(String, primary_key=True)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# Assuming you have your tfidf_matrix and course_content_matrix defined
-
-# Fetch data from the r_users table
-education_list = session.query(Cedu.student_number, Cedu.education).all()
-
-user_education_list = [
-  {'student_number': student_number, 'user_education': education}
-    for student_number, education in education_list
-  ]
-
-course_contents = [row[0] for row in course_contents]
-count_vectorizer = CountVectorizer()
-course_content_matrix = count_vectorizer.fit_transform(course_contents)
-
 def recs_on_education_BOW(student_number):
+  
+    Base = declarative_base()
+    
+    class Cedu(Base):
+        __tablename__ = 'r_users'  
+    
+        student_number = Column(String, primary_key=True)
+        education = Column(String, primary_key=True)
+    
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    
+    
+    education_list = session.query(Cedu.student_number, Cedu.education).all()
+    
+    
+    session.close()
+    
+    user_education_list = [
+      {'student_number': student_number, 'user_education': education}
+        for student_number, education in education_list
+      ]
+    
+    
+  
     education_dict = {}
 
     # Find the user_interest_vector for the specified student_number
@@ -81,19 +83,19 @@ def recs_on_education_BOW(student_number):
 
         # Update the dictionary with terms from each user's education
         for term in education_terms:
-            # Cap the count of each term at 1
+            
             if term not in education_dict:
                 education_dict[term] = 1
 
     user_education_vector = [education_dict.get(edu, 0) for edu in count_vectorizer.get_feature_names_out()]
-    print('edu_intsss', education_dict)
+    #print('edu_intsss', education_dict)
 
     similarities = cosine_similarity([user_education_vector], course_content_matrix)
 
     course_indices = similarities.argsort()[0][::-1]
 
 
-      # Recommend the top N courses to the user (e.g., top 5)
+      
     top_n = 6
     recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
 
@@ -112,7 +114,7 @@ def recs_on_education_BOW(student_number):
     }
 
 
-      # Display or use the recommended courses
+      
     return student_recommendations
 
 
@@ -123,7 +125,7 @@ def get_ratings_from_database(student_number):
       query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
       result = conn.execute(query, {"student_number": student_number})
 
-      # Create a dictionary to store the ratings for each course
+     
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
@@ -131,18 +133,18 @@ def get_ratings_from_database(student_number):
 
 
 def get_recommendations_edu_with_ratings_BOW(student_number):
-  recommendations = recs_on_education_BOW(student_number)  # Retrieve recommended courses as before
-  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
-  print(rated_courses)
+  recommendations = recs_on_education_BOW(student_number)  
+  rated_courses = get_ratings_from_database(student_number)  
+  
 
   for recommendation_set in recommendations['recommended_courses']:
-    course_code = recommendation_set['course_code']  # Access 'course_code' within the nested structure
-          # Check if there is a rating for the current course in the rated_courses list
+    course_code = recommendation_set['course_code']  
+    
     if course_code in rated_courses:
         recommendation_set['rating'] = rated_courses[course_code]
-        print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+        
     else:
-              # If no rating found, assume 'off'
+             
       recommendation_set['rating'] = 'off'
 
 

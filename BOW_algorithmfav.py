@@ -11,7 +11,7 @@ import pandas as pd
 import os
 
 
-# Rest of your code remains the same
+
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -28,7 +28,7 @@ engine = create_engine(
 Base = declarative_base()
 
 class Cinfo(Base):
-  __tablename__ = 'r_courses'  # Replace with your actual table name
+  __tablename__ = 'r_courses' 
 
   content = Column(String, primary_key=True)
   course_code = Column(String, primary_key=True)
@@ -58,7 +58,6 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 r_favo_data = session.query(Rfavo.student_number, Rfavo.course_code, Rfavo.id).filter(Rfavo.rating == 'on').all()
-
 
 
 
@@ -131,18 +130,17 @@ def get_ratings_from_database(student_number):
 
 
 def get_recommendations_with_ratings_BOW(student_number):
-  recommendations = get_recommendations_fav_BOW(student_number)  # Retrieve recommended courses as before
-  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
+  recommendations = get_recommendations_fav_BOW(student_number)  
+  rated_courses = get_ratings_from_database(student_number) 
 
   for recommendation_set in recommendations:
       for recommendation in recommendation_set['recommended_courses']:
-          course_code = recommendation['course_code']  # Access 'course_code' within the nested structure
-          # Check if there is a rating for the current course in the rated_courses list
+          course_code = recommendation['course_code']  
           if course_code in rated_courses:
               recommendation['liked'] = rated_courses[course_code]
-              #print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+              
           else:
-              # If no rating found, assume 'off'
+              
               recommendation['liked'] = 'off'
 
 

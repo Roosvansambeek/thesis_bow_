@@ -23,101 +23,107 @@ engine = create_engine(
 
 
 Base = declarative_base()
-
 class Cinfo(Base):
-  __tablename__ = 'r_courses'  # Replace with your actual table name
-
+  __tablename__ = 'r_courses' 
+  
   content = Column(String, primary_key=True)
   course_code = Column(String, primary_key=True)
   course_name = Column(String, primary_key=True)
+  degree= Column(String, primary_key=True)
 
 Session = sessionmaker(bind=engine)
 session = Session() 
 
 # Fetch data from the r_views table
-course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_name).all()
+course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_name, Cinfo.degree).all()
 
-course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_title'])
+course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_title', 'degree'])
 
 # Create indices
 indices = pd.Series(course_contents_df.index, index=course_contents_df['course_code']).drop_duplicates()
 
-# Now you can access indices using course code
 
 
 # Close the session
 session.close()
 
-Base = declarative_base()
-
-class Cedu(Base):
-    __tablename__ = 'r_users'  # Replace with your actual table name
-
-    student_number = Column(String, primary_key=True)
-    education = Column(String, primary_key=True)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# Assuming you have your tfidf_matrix and course_content_matrix defined
-
-# Fetch data from the r_users table
-education_list = session.query(Cedu.student_number, Cedu.education).all()
-
-user_education_list = [
-  {'student_number': student_number, 'user_education': education}
-    for student_number, education in education_list
-  ]
-
 course_contents = [row[0] for row in course_contents]
-tfidf_vectorizer = TfidfVectorizer()
+tfidf_vectorizer = TfidfVectorizer(stop_words='english')
 course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
 
 def recs_on_education_TFIDF(student_number):
-    education_dict = {}
+  Base = declarative_base()
 
-    # Find the user_interest_vector for the specified student_number
-    for user in user_education_list:
-        education_terms = user['user_education'].split()  # Split the string into terms
+  class Cedu(Base):
+      __tablename__ = 'r_users'  # Replace with your actual table name
 
-        # Update the dictionary with terms from each user's education
-        for term in education_terms:
-            # Cap the count of each term at 1
-            if term not in education_dict:
-                education_dict[term] = 1
+      student_number = Column(String, primary_key=True)
+      education = Column(String, primary_key=True)
 
-    user_education_vector = [education_dict.get(edu, 0) for edu in tfidf_vectorizer.get_feature_names_out()]
-    print('edu_intsss', education_dict)
+  Session = sessionmaker(bind=engine)
+  session = Session()
 
-    similarities = cosine_similarity([user_education_vector], course_content_matrix)
+ 
+  # Fetch data from the r_users table
+  education_list = session.query(Cedu.student_number, Cedu.education).all()
 
-    course_indices = similarities.argsort()[0][::-1]
+  session.close()
+
+  user_education_list = [
+      {'student_number': student_number, 'education': {'user_education': education.lower()} if education else {'user_education': 'thesis'}}
+      for student_number, education in education_list
+  ]
+
+  
+  
+  education_dict = {}
+
+  
+  for user in user_education_list:
+      if user['student_number'] == student_number:
+          education_value = user['education']['user_education']
+          education_terms = education_value.lower().split()
+          # Update the dictionary with terms from the user's education
+          for term in education_terms:
+              education_dict[term] = 1
+          break  
+        
+          
+
+  
+
+  user_education_vector = [education_dict.get(edu, 0) for edu in tfidf_vectorizer.get_feature_names_out()]
+  
+
+  similarities = cosine_similarity([user_education_vector], course_content_matrix)
+
+  course_indices = similarities.argsort()[0][::-1]
 
 
-      # Recommend the top N courses to the user (e.g., top 5)
-    top_n = 6
-    recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
+   
+  top_n = 25
+  recommended_courses = course_contents_df.iloc[course_indices[:top_n]]
 
 
-    student_recommendations = {
-        "student_number": student_number,
-        "recommended_courses": [
-            {
-                "course_code": course["course_code"],
-                "course_content": course["course_content"],
-                "course_title": course["course_title"],
-                "similarity_score": similarities[0, index]
-            }
-            for index, course in recommended_courses.iterrows()
-        ]
-    }
+  student_recommendations = {
+      "student_number": student_number,
+      "recommended_courses": [
+          {
+              "course_code": course["course_code"],
+              "course_content": course["course_content"],
+              "course_title": course["course_title"],
+              "degree": course["degree"],
+              "similarity_score": similarities[0, index]
+          }
+          for index, course in recommended_courses.iterrows()
+      ]
+  }
 
 
-      # Display or use the recommended courses
-    return student_recommendations
+    # Display or use the recommended courses
+  return student_recommendations
 
-
-
+    
 
 def get_ratings_from_database(student_number):
   with engine.connect() as conn:
@@ -129,25 +135,53 @@ def get_ratings_from_database(student_number):
   return ratings
 
 
+def get_degree_from_database(student_number):
+  with engine.connect() as conn:
+      query = text("SELECT level FROM r_users WHERE student_number = :student_number")
+      result = conn.execute(query, {"student_number": student_number})
+  
+      levels = [row.level for row in result]
+  
+  return levels
 
 
 def get_recommendations_edu_with_ratings_TFIDF(student_number):
   recommendations = recs_on_education_TFIDF(student_number)  # Retrieve recommended courses as before
   rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
-  print(rated_courses)
+  #print(rated_courses)
 
   for recommendation_set in recommendations['recommended_courses']:
-    course_code = recommendation_set['course_code']  # Access 'course_code' within the nested structure
-          # Check if there is a rating for the current course in the rated_courses list
+    course_code = recommendation_set['course_code']  
     if course_code in rated_courses:
         recommendation_set['rating'] = rated_courses[course_code]
-        print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+        
     else:
-              # If no rating found, assume 'off'
+              
       recommendation_set['rating'] = 'off'
 
 
   return recommendations
+
+
+def get_recommendations_edu_level_TFIDF(student_number):
+  recommendations = get_recommendations_edu_with_ratings_TFIDF(student_number)
+  degree = get_degree_from_database(student_number)
+
+
+  student_degree = degree[0] if degree else None
+
+  if student_degree:
+
+      filtered_recommendations = {
+          "student_number": student_number,
+          "recommended_courses": [
+              recommendation_set for recommendation_set in recommendations['recommended_courses']
+              if recommendation_set['degree'].lower() == student_degree.lower()
+          ]
+      }
+      return filtered_recommendations
+  else:
+      return {"student_number": student_number, "recommended_courses": []}
 
 
 

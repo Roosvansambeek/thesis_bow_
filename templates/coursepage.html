@@ -17,15 +17,30 @@
 <body>
   {% include 'navbar.html' %}
   
-  <div class="container">
+    <div class="container">
     <div class="row mt-4">
-      <div class="col">
-        <h2>{{ course['course_name'] }}</h2>
+      <div class="course-header">
+        <h2><b>{{ course['course_name'] }}</b></h2>
+      </div>
+      <div class="col-8">
         <h5><b>Content</b></h5>
         <p>{{ course['content'] }}</p>
         <h5><b>Aims</b></h5>
         <p>{{ course['aims'] }}</p>
+        <h5><b>Tests</b></h5>
+        <p>{{ course['tests'] }}</p>
+        <h5><b>Lecturers</b></h5>
+        <p>{{ course['lecturers'] }}</p>
       </div>
+      <div class="col-4">
+        <p style="margin-top: 30px"><b>Course_code: </b>{{ course['course_code'] }} <br>
+        <b>Language: </b>{{ course['language'] }} <br>
+        <b>Degree: </b>{{ course['degree'] }} <br>
+        <b>ECTS: </b>{{ course['ECTS'] }} <br>
+        <b>School: </b>{{ course['school'] }} <br>
+        <b>Block: </b>{{ course['block'] }}</p>
+      </div>
+      
     </div>
     <br><br>
     {% include 'edurec.html' %}

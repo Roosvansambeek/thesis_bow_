@@ -3,29 +3,31 @@
         <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your saved courses!</b></h3>
         <div class="row">
             {% if fav_recommendations %}
-                {% for student_recommendation in fav_recommendations %}
-                    {% for recommended_course in student_recommendation['recommended_courses'] %}
-                        <div class="col-4">
-                            <a href="/course/{{ recommended_course['course_code'] }}/{{ student_number }}" class="card">
-                                <div class="card-body">
-                                    <div class="course-header">
-                                        <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5>
+                <div class="row">
+                    {% for student_recommendation in fav_recommendations %}
+                        {% for recommended_course in student_recommendation['recommended_courses'] %}
+                            <div class="col-4">
+                                <a href="/course/{{ recommended_course['course_code'] }}/{{ student_recommendation['student_number'] }}" class="card">
+                                    <div class="card-body">
+                                        <div class="course-header">
+                                            <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5>
+                                        </div>
+                                        <p class="course-details">
+                                            {% if recommended_course['course_content'] | length > 200 %}
+                                                {{ recommended_course['course_content'][:200] }}...
+                                            {% else %}
+                                                {{ recommended_course['course_content'] }}
+                                            {% endif %}
+                                        </p>
                                         <div class="star-button">
                                             {% include 'star_explore.html' %}
                                         </div>
                                     </div>
-                                    <p class="course-details">
-                                        {% if recommended_course['course_content'] | length > 200 %}
-                                            {{ recommended_course['course_content'][:200] }}...
-                                        {% else %}
-                                            {{ recommended_course['course_content'] }}
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
+                                </a>
+                            </div>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
+                </div>
             {% else %}
           <div class="col-12">
               <p>  Save courses to get more recommendations!</p>

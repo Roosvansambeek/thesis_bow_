@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 
 
-# Rest of your code remains the same
+
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -17,16 +17,16 @@ engine = create_engine(
   }
 )
 
+
 def load_courses_from_db():
   with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM r_courses"))
+    result = conn.execute(text("SELECT course_name, course_code, language, aims, content, degree, ECTS, school, tests, block, lecturers FROM r_courses"))
     courses = []
     columns = result.keys()
     for row in result:
       result_dict = {column: value for column, value in zip(columns, row)}
       courses.append(result_dict)
     return courses
-
 
 
 def load_carousel_courses_from_db(student_number):
@@ -72,16 +72,13 @@ def load_best_courses_with_favorite_from_db(student_number):
 
 
 
-
 def add_test_to_db(request, student_number, course_code, favorite_value):
   with engine.connect() as conn:
-      # Check if the record already exists
       existing_record = conn.execute(
           text("SELECT * FROM r_favorites4 WHERE course_code = :course_code AND student_number = :student_number"),
           {"course_code": course_code, "student_number": student_number}
       ).fetchone()
 
-      # Fetch the 'id' from 'course_info' based on the 'course_code'
       course_info_id = conn.execute(
           text("SELECT id FROM r_courses WHERE course_code = :course_code"),
           {"course_code": course_code}
@@ -90,22 +87,16 @@ def add_test_to_db(request, student_number, course_code, favorite_value):
       if course_info_id:
           course_info_id = course_info_id[0]
       else:
-          # Handle the case where 'course_code' doesn't exist in 'course_info'
-          # You can raise an exception, return an error, or handle it as needed
-          # For now, I'm assuming you want to set it to NULL
           course_info_id = None
 
       print(f"Retrieved id for course_code={course_code}: id={course_info_id}")
 
       if existing_record:
-          # Update the existing record
           query = text("UPDATE r_favorites4 SET rating = :rating, id = :id WHERE course_code = :course_code AND student_number = :student_number")
       else:
-          # Insert a new record
           query = text("INSERT INTO r_favorites4 (course_code, student_number, rating, id) VALUES (:course_code, :student_number, :rating, :id)")
 
       conn.execute(query, {"course_code": course_code, "student_number": student_number, "rating": favorite_value, "id": course_info_id})
-
 
 
 def load_favorite_courses_from_db(student_number):
@@ -126,6 +117,8 @@ def load_favorite_courses_from_db(student_number):
           result_dict = {column: value for column, value in zip(columns, row)}
           favorite_courses.append(result_dict)
       return favorite_courses
+
+
 
 def load_viewed_courses_from_db(student_number):
   with engine.connect() as conn:
@@ -163,10 +156,10 @@ def check_credentials(student_number, password):
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
-      query = text("INSERT INTO r_users (management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language, Bachelor, Master) "
-                   "VALUES (:management, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language,  :Bachelor, :Master)")
+      query = text("INSERT INTO r_users (management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language) "
+                   "VALUES (:management, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language)")
 
-      # Construct the parameter dictionary
+     
       params = {
             'management': data.get('management'),
             'data':data.get('data'),
@@ -191,9 +184,7 @@ def add_interests_to_db(data):
             'communication': data.get('communication'),
             'history': data.get('history'),
             'culture': data.get('culture'),
-            'language': data.get('language'),
-            'Bachelor': data.get('Bachelor'),
-            'Master': data.get('Master'),
+            'language': data.get('language')
         }
       
 
@@ -227,12 +218,10 @@ def update_interests(student_number, data):
           "communication = :communication, "
           "history = :history, "
           "culture = :culture, "
-          "language = :language, "
-          "Bachelor = :Bachelor, "
-          "Master = :Master "
+          "language = :language "
               "WHERE student_number = :student_number "
           )
-# Add student_number and password to the parameter dictionary
+
       params = {
           'management': data.get('management'),
           'data':data.get('data'),
@@ -258,8 +247,6 @@ def update_interests(student_number, data):
           'history': data.get('history'),
           'culture': data.get('culture'),
           'language': data.get('language'),
-          'Bachelor': data.get('Bachelor'),
-          'Master': data.get('Master'),
           'student_number': student_number
       }
 
@@ -267,7 +254,7 @@ def update_interests(student_number, data):
     
 def add_views_to_db(student_number, course_code, timestamp, id):
   with engine.connect() as conn:
-      # Retrieve the 'id' value from the "r_courses" table based on the 'course_code'
+     
       course_info_id = conn.execute(
           text("SELECT id FROM r_courses WHERE course_code = :course_code"),
           {"course_code": course_code}
@@ -278,14 +265,14 @@ def add_views_to_db(student_number, course_code, timestamp, id):
       else:
           course_info_id = None
 
-      # Check if a record with the same 'id' and 'student_number' combination already exists in "r_views"
+     
       existing_record = conn.execute(
           text("SELECT id FROM r_views WHERE student_number = :student_number AND id = :id"),
           {"student_number": student_number, "id": course_info_id}
       ).fetchone()
 
       if not existing_record:
-          # If no matching record exists, proceed with the insert
+          
           query = text("INSERT INTO r_views (course_code, student_number, timestamp, id) VALUES (:course_code, :student_number, :timestamp, :id)")
           conn.execute(query, {"course_code": course_code, "student_number": student_number, "timestamp": timestamp, "id": course_info_id})
 

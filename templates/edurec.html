@@ -1,6 +1,6 @@
 <div class="section">
     <div class="row">
-        <h3><b><span style="color: #ACBED8;"> Other Courses </span> you will maybe find interesting!</b></h3>
+        <h3><b><span style="color: #ACBED8;"> Other Courses </span> you may find interesting!</b></h3>
         <div class="row">
                   {% for recommendations_c in recommendations_courses %}
                     {% for recommended_course in recommendations_c['recommended_courses'] %}
@@ -9,9 +9,7 @@
                                 <div class="card-body">
                                     <div class="course-header">
                                         <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5>
-                                        <div class="star-button">
-                                            {% include 'star_explore.html' %}
-                                        </div>
+                                          
                                     </div>
                                     <p class="course-details">
                                         {% if recommended_course['course_content'] | length > 200 %}
@@ -20,6 +18,9 @@
                                             {{ recommended_course['course_content'] }}
                                         {% endif %}
                                     </p>
+                                  <div class="star-button">
+                                      {% include 'star_explore.html' %}
+                                  </div>
                                 </div>
                             </a>
                         </div>
