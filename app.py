@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, load_viewed_courses_from_db, search_courses_from_db
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, load_viewed_courses_from_db, search_courses_from_db, load_ratings_and_details_for_viewed_courses
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 
@@ -85,13 +85,9 @@ def home(student_number):
     
     education_recommendations = get_recommendations_edu_level_TFIDF(student_number)
     num_education_recommendations=len(education_recommendations)
-    print('teste2', num_education_recommendations)
     fav_recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
-    print('favff:', fav_recommendations)
-    num_favorite_recommendations = len(fav_recommendations)
-    print('tessstt:', num_favorite_recommendations)
     interests_recommendations = get_recommendations_level_TFIDF(student_number)
-    viewed_courses=load_viewed_courses_from_db(student_number)
+    viewed_courses=load_ratings_and_details_for_viewed_courses(student_number)
 
     data = request.form  
 
@@ -118,7 +114,7 @@ def home(student_number):
 
 
 
-    return render_template('home.html', student_number=student_number, fav_recommendations=fav_recommendations, interests_recommendations=interests_recommendations, viewed_courses=viewed_courses, education_recommendations=education_recommendations, num_favorite_recommendations=num_favorite_recommendations)
+    return render_template('home.html', student_number=student_number, fav_recommendations=fav_recommendations, interests_recommendations=interests_recommendations, viewed_courses=viewed_courses, education_recommendations=education_recommendations)
 
 
 

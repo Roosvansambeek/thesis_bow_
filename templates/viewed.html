@@ -1,39 +1,65 @@
 <div class="section">
   <div class="row">
-    <h3><b><span style="color: #ACBED8;">Viewed</span> Course(s)!</b></h3>
-  </div>
-  <div class="row">
+    <h3><b><span style="color: #ACBED8;">Viewed</span> Courses!</b></h3>
     {% if viewed_courses %}
-      {% for v_course in viewed_courses[:12] %}
-        <div class="col-4">
-          <a href="/course/{{v_course['course_code']}}/{{student_number}}" class="card" style="width: 394px; height: 260px;">
-            <div class="card-body">
-                  <div class="course-header">
-                    <h5 class="card-title"><b>{{ v_course['course_name'] }}</b></h5>
-                    
-                  </div>
-                  <p class="course-details">
-                    {% if v_course['content'] | length > 200 %}
-                      {{ v_course['content'][:200] }}...
-                    {% else %}
-                      {{ v_course['content'] }}
-                    {% endif %}
-                  </p>
-                    <div class="star-button" style="position: absolute;
-                      bottom: 0;
-                      right: 0;
-                      margin: 10px;" >
-                        {% include 'star_viewed.html' %}
-                    </div>
-                </div>
-              </a>
+      <div id="carousel_viewed" class="carousel slide col-12">
+        <div class="carousel-indicators">
+          {% for v_course in viewed_courses %}
+            {% for i in range(viewed_courses|length) %}
+              <button type="button" data-bs-target="#carousel_viewed" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+            {% endfor %}
+          {% endfor %}
         </div>
-      {% endfor %}
-    {% else %}
-    <div class="col-12">
-        <p>  No viewed course(s) yet!</p>
+        <div class="carousel-inner">
+          {% for i in range(0, viewed_courses|length, 3) %}
+            <div class="carousel-item{% if loop.first %} active{% endif %}">
+              <div class="row">
+                {% for v_course in viewed_courses[i:i+3] %}
+                  <div class="col-4">
+                    <!-- Your content for each viewed course goes here -->
+                    <a href="/course/{{ v_course['course_code'] }}/{{ student_number }}" class="card" style="width: 330px; height: 260px;">
+                      <div class="card-body">
+                        <div class="course-header">
+                          <h5 class="card-title"><b>{{ v_course['course_name'] }}</b></h5>
+                        </div>
+                        <p class="course-details">
+                          {% if v_course['content'] | length > 200 %}
+                            {{ v_course['content'][:200] }}...
+                          {% else %}
+                            {{ v_course['content'] }}
+                          {% endif %}
+                        </p>
+                        <div class="star-button" style="position: absolute; bottom: 0; right: 0; margin: 10px;">
+                          {% include 'star_viewed.html' %}
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel_viewed" data-bs-slide="prev">
+          <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel_viewed" data-bs-slide="next">
+          <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
-      {% endif %}
+    {% else %}
+      <div class="col-12">
+        <p>No viewed course(s) yet!</p>
+      </div>
+    {% endif %}
   </div>
 </div>
+
+
+
+
+
 

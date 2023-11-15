@@ -1,32 +1,50 @@
 <div class="section">
   <div class="row">
-    <h3><b><span style="color: #ACBED8;">Courses</span> based on your interests!</b></h3>
-  </div>
-  <div class="row">
-    {% for recommendation in interests_recommendations['recommended_courses'][:6] %}
-      <div class="col-4">
-              <a href="/course/{{recommendation['course_code']}}/{{student_number}}" class="card" style="width: 394px; height: 260px;">
-              <div class="card-body">
-                <div class="course-header">
-                  <h5 class="card-title"><b>{{ recommendation['course_title'] }}</b></h5>
-                  
-                </div>
-                  <p class="course-details">
-                    {% if recommendation['course_content'] | length > 200 %}
-                      {{ recommendation['course_content'][:200] }}...
-                    {% else %}
-                      {{ recommendation['course_content'] }}
-                    {% endif %}
-                  </p>
-                <div class="star-button" style="position: absolute;
-                  bottom: 0;
-                  right: 0;
-                  margin: 10px;" >
-                    {% include 'star_compulsory.html' %}
-                </div>
-              </div>
-            </a>
+    <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your interests!</b></h3>
+    <div id="carousel_interests" class="carousel slide col-12">
+      <div class="carousel-indicators">
+        {% for i in range(interests_recommendations['recommended_courses']|length) %}
+          <button type="button" data-bs-target="#carousel_interests" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+        {% endfor %}
       </div>
-    {% endfor %}
+      <div class="carousel-inner">
+        {% for i in range(0, interests_recommendations['recommended_courses']|length, 3) %}
+          <div class="carousel-item{% if loop.first %} active{% endif %}">
+            <div class="row">
+              {% for recommendation in interests_recommendations['recommended_courses'][i:i+3] %}
+                <div class="col-4">
+                  <!-- Your content for each recommended course goes here -->
+                  <a href="/course/{{ recommendation['course_code'] }}/{{ student_number }}" class="card" style="width: 330px; height: 260px;">
+                    <div class="card-body">
+                      <div class="course-header">
+                        <h5 class="card-title"><b>{{ recommendation['course_title'] }}</b></h5>
+                      </div>
+                      <p class="course-details">
+                        {% if recommendation['course_content'] | length > 200 %}
+                          {{ recommendation['course_content'][:200] }}...
+                        {% else %}
+                          {{ recommendation['course_content'] }}
+                        {% endif %}
+                      </p>
+                      <div class="star-button" style="position: absolute; bottom: 0; right: 0; margin: 10px;">
+                        {% include 'star_compulsory.html' %}
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel_interests" data-bs-slide="prev">
+        <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel_interests" data-bs-slide="next">
+        <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
   </div>
 </div>

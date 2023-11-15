@@ -1,12 +1,12 @@
 <div class="section">
   <div class="row">
       <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your saved courses!</b></h3>
-        <div id="carousel_explore" class="carousel slide col-12">
+        <div id="carousel_fav" class="carousel slide col-12">
             <div class="carousel-indicators">
                 {% if fav_recommendations %}
                     {% for student_recommendation in fav_recommendations %}
                         {% for i in range(student_recommendation['recommended_courses']|length) %}
-                            <button type="button" data-bs-target="#carousel_explore" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+                            <button type="button" data-bs-target="#carousel_fav" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
@@ -44,11 +44,11 @@
                 {% endfor %}
             </div>
             {% if fav_recommendations %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#carousel_explore" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel_fav" data-bs-slide="prev">
                     <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carousel_explore" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel_fav" data-bs-slide="next">
                     <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
                     <span class="visually-hidden">Next</span>
                 </button>

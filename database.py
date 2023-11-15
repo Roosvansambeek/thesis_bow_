@@ -138,6 +138,51 @@ def load_viewed_courses_from_db(student_number):
           viewed_courses.append(result_dict)
       return viewed_courses
 
+def load_ratings_and_details_for_viewed_courses(student_number):
+  with engine.connect() as conn:
+      query = text("""
+          SELECT r_views.course_code, r_favorites4.rating, r_courses.course_name, r_courses.content
+          FROM r_views
+          LEFT JOIN r_favorites4 ON r_views.student_number = r_favorites4.student_number
+                                  AND r_views.course_code = r_favorites4.course_code
+          INNER JOIN r_courses ON r_views.course_code = r_courses.course_code
+          WHERE r_views.student_number = :student_number
+      """)
+
+      result = conn.execute(query, {"student_number": student_number})
+
+      ratings_and_details_for_viewed_courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          ratings_and_details_for_viewed_courses.append(result_dict)
+      return ratings_and_details_for_viewed_courses
+
+student_number ='do_23_ni'
+recommendation = load_ratings_and_details_for_viewed_courses(student_number)
+print('testttt:', recommendation)
+
+def load_ratings_for_viewed_courses(student_number):
+  with engine.connect() as conn:
+      query = text("""
+          SELECT r_views.course_code, r_favorites4.rating
+          FROM r_views
+          LEFT JOIN r_favorites4 ON r_views.student_number = r_favorites4.student_number
+                                  AND r_views.course_code = r_favorites4.course_code
+          WHERE r_views.student_number = :student_number
+      """)
+
+      result = conn.execute(query, {"student_number": student_number})
+
+      ratings_for_viewed_courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          ratings_for_viewed_courses.append(result_dict)
+      return ratings_for_viewed_courses
+
+
+
 
 def add_login_to_db(student_number, level, education):
   with engine.connect() as conn:
