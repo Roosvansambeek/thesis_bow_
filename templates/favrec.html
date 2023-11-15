@@ -1,44 +1,63 @@
 <div class="section">
-    <div class="row">
-        <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your saved courses!</b></h3>
-        <div class="row">
-            {% if fav_recommendations %}
-                <div class="row">
+  <div class="row">
+      <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your saved courses!</b></h3>
+        <div id="carousel_explore" class="carousel slide col-12">
+            <div class="carousel-indicators">
+                {% if fav_recommendations %}
                     {% for student_recommendation in fav_recommendations %}
-                        {% for recommended_course in student_recommendation['recommended_courses'] %}
-                            <div class="col-4">
-                                <a href="/course/{{ recommended_course['course_code'] }}/{{ student_recommendation['student_number'] }}" class="card" style="width: 394px; height: 260px;">
-                                    <div class="card-body">
-                                        <div class="course-header">
-                                            <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5> 
-                                        </div> 
-                                        
-                                  
-                                        <p class="course-details">
-                                            {% if recommended_course['course_content'] | length > 200 %}
-                                                {{ recommended_course['course_content'][:200] }}...
-                                            {% else %}
-                                                {{ recommended_course['course_content'] }}
-                                            {% endif %}
-      
-                                        </p>
-                                      <div class="star-button" style="position: absolute;
-                                        bottom: 0;
-                                        right: 0;
-                                        margin: 10px;" >
-                                          {% include 'star_explore.html' %}
-                                      </div>
-                                    </div>
-                                </a>
-                            </div>
+                        {% for i in range(student_recommendation['recommended_courses']|length) %}
+                            <button type="button" data-bs-target="#carousel_explore" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
                         {% endfor %}
                     {% endfor %}
-                </div>
+                {% endif %}
+            </div>
+            <div class="carousel-inner">
+                {% for student_recommendation in fav_recommendations %}
+                    {% for i in range(0, student_recommendation['recommended_courses']|length, 3) %}
+                        <div class="carousel-item{% if loop.first %} active{% endif %}">
+                            <div class="row">
+                                {% for recommended_course in student_recommendation['recommended_courses'][i:i+3] %}
+                                    <div class="col-4">
+                                        <!-- Your content for each recommended course goes here -->
+                                        <a href="/course/{{ recommended_course['course_code'] }}/{{ student_recommendation['student_number'] }}" class="card" style="width: 330px; height: 260px;">
+                                            <div class="card-body">
+                                                <div class="course-header">
+                                                    <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5> 
+                                                </div> 
+                                                <p class="course-details">
+                                                    {% if recommended_course['course_content'] | length > 200 %}
+                                                        {{ recommended_course['course_content'][:200] }}...
+                                                    {% else %}
+                                                        {{ recommended_course['course_content'] }}
+                                                    {% endif %}
+                                                </p>
+                                                <div class="star-button" style="position: absolute; bottom: 0; right: 0; margin: 10px;">
+                                                    {% include 'star_explore.html' %}
+                                                </div>
+                                            </div>   
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% if fav_recommendations %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel_explore" data-bs-slide="prev">
+                    <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel_explore" data-bs-slide="next">
+                    <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Next</span>
+                </button>
             {% else %}
-          <div class="col-12">
-              <p>  Save courses to receive more recommendations!</p>
-          </div>
+                <div class="col-12">
+                    <p>Save courses to receive more recommendations!</p>
+                </div>
             {% endif %}
         </div>
-    </div>
+  </div>
 </div>
+

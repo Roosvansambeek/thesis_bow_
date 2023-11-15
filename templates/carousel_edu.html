@@ -1,10 +1,11 @@
 <div class="container">
     <div class="row">
         <div id="carouselExampleCaptions" class="carousel slide col-12">
-            <div class="carousel-indicators">
-                {% for edu_rec in education_recommendations['recommended_courses']%}
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ loop.index + 1 }}"></button>
-                {% endfor %}
+              <div id="carousel_random" class="carousel slide col-12">
+                <div class="carousel-indicators">
+                  {% for edu_rec in education_recommendations['recommended_courses']%}
+                    <button type="button" data-bs-target="#carousel_random" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{loop.index + 1 }}"></button>
+                  {% endfor %}
             </div>
             <div class="carousel-inner">
               {% for edu_rec in education_recommendations['recommended_courses'] %}
@@ -30,13 +31,13 @@
                     </a>
                 </div>
                 {% endfor %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                    <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
-                    <span class="visually-hidden">Previous</span>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel_random" data-bs-slide="prev">
+                <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+                  <span class="visually-hidden">Previous</span>
                 </button>
-                <button class a="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                    <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
-                    <span class="visually-hidden">Next</span>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel_random" data-bs-slide="next">
+                <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+                  <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </div>
