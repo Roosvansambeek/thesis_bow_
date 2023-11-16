@@ -1,15 +1,16 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, check_credentials, update_interests, add_views_to_db, add_test_to_db, load_best_courses_with_favorite_from_db, load_viewed_courses_from_db, search_courses_from_db, load_ratings_and_details_for_viewed_courses
+from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, update_interests, add_views_to_db, add_test_to_db,  load_viewed_courses_from_db, search_courses_from_db, load_ratings_and_details_for_viewed_courses
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 
 
+
 #TFIDF
 #fav
-from TFIDF_algorithmfav import get_recommendations_fav_level_TFIDF, get_recommendations_fav_with_ratings_TFIDF
+from TFIDF_algorithmfav import get_recommendations_fav_with_ratings_TFIDF
 
 #int
-from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF, get_recommendations_level_TFIDF, get_recommendations_with_ratings_TFIDF
+from TFIDF_algorithminterests import get_recommendations_level_TFIDF
 
 #edu
 from TFIDF_education import get_recommendations_edu_level_TFIDF 
@@ -19,25 +20,19 @@ from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
 
 #BOW
 #fav
-from BOW_algorithmfav import get_recommendations_fav_BOW, get_recommendations_with_ratings_BOW
+#from BOW_algorithmfav import get_recommendations_fav_BOW, get_recommendations_with_ratings_BOW
 
 #int
-from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW, get_recommendations_level_BOW
+#from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW, get_recommendations_level_BOW
 
 #edu
-from BOW_education import recs_on_education_BOW, get_recommendations_edu_with_ratings_BOW 
+#from BOW_education import recs_on_education_BOW, get_recommendations_edu_with_ratings_BOW 
 
 #course 
-from BOW_algorithmcourse import get_recommendations_course_BOW
+#from BOW_algorithmcourse import get_recommendations_course_BOW
 
 
 app = Flask(__name__)
-
-
-filters = {
-    'Degree': ['Bachelor', 'Master', 'Pre-master'],
-    'Block': [1, 2, 3, 4]
-}
 
 
 @app.route("/")
@@ -110,7 +105,7 @@ def home(student_number):
 
         education_recommendations = get_recommendations_edu_level_TFIDF(student_number)
 
-        viewed_courses=load_viewed_courses_from_db(student_number)
+        viewed_courses=load_ratings_and_details_for_viewed_courses(student_number)
 
 
 

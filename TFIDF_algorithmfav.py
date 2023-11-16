@@ -131,15 +131,6 @@ def get_ratings_from_database(student_number):
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
-def get_degree_from_database(student_number):
-  with engine.connect() as conn:
-      query = text("SELECT level FROM r_users WHERE student_number = :student_number")
-      result = conn.execute(query, {"student_number": student_number})
-
-      # Create a list to store the levels for the student
-      levels = [row[0] for row in result]
-
-  return levels
 
 
 
@@ -162,24 +153,5 @@ def get_recommendations_fav_with_ratings_TFIDF(student_number):
 
   return recommendations
 
-
-
-def get_recommendations_fav_level_TFIDF(student_number):
-  recommendations = get_recommendations_fav_with_ratings_TFIDF(student_number)
-  degree = get_degree_from_database(student_number)
-
-  student_degree = degree[0] if degree else None
-
-  if student_degree and recommendations and 'recommended_courses' in recommendations[0]:
-      filtered_recommendations = {
-          "student_number": student_number,
-          "recommended_courses": [
-              recommendation_set for recommendation_set in recommendations[0]['recommended_courses']
-              if 'degree' in recommendation_set and recommendation_set['degree'].lower() == student_degree.lower()
-          ]
-      }
-      return filtered_recommendations
-  else:
-      return {"student_number": student_number, "recommended_courses": []}
 
 

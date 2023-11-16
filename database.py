@@ -3,9 +3,6 @@ from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 import os
 
-
-
-
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
 engine = create_engine(
@@ -49,24 +46,6 @@ def load_carousel_courses_from_db(student_number):
       return carousel_courses
 
 
-def load_best_courses_with_favorite_from_db(student_number):
-  with engine.connect() as conn:
-      query = text("""
-          SELECT c.*, rf.rating 
-          FROM r_courses c
-          LEFT JOIN r_favorites4 rf
-          ON c.course_code = rf.course_code AND rf.student_number = :student_number
-      """)
-    
-      result = conn.execute(query, {"student_number": student_number})
-
-      best_courses = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          best_courses.append(result_dict)
-
-      return best_courses
 
 
 
@@ -118,8 +97,6 @@ def load_favorite_courses_from_db(student_number):
           favorite_courses.append(result_dict)
       return favorite_courses
 
-
-
 def load_viewed_courses_from_db(student_number):
   with engine.connect() as conn:
       query = text("""
@@ -158,31 +135,6 @@ def load_ratings_and_details_for_viewed_courses(student_number):
           ratings_and_details_for_viewed_courses.append(result_dict)
       return ratings_and_details_for_viewed_courses
 
-student_number ='do_23_ni'
-recommendation = load_ratings_and_details_for_viewed_courses(student_number)
-print('testttt:', recommendation)
-
-def load_ratings_for_viewed_courses(student_number):
-  with engine.connect() as conn:
-      query = text("""
-          SELECT r_views.course_code, r_favorites4.rating
-          FROM r_views
-          LEFT JOIN r_favorites4 ON r_views.student_number = r_favorites4.student_number
-                                  AND r_views.course_code = r_favorites4.course_code
-          WHERE r_views.student_number = :student_number
-      """)
-
-      result = conn.execute(query, {"student_number": student_number})
-
-      ratings_for_viewed_courses = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          ratings_for_viewed_courses.append(result_dict)
-      return ratings_for_viewed_courses
-
-
-
 
 def add_login_to_db(student_number, level, education):
   with engine.connect() as conn:
@@ -191,13 +143,6 @@ def add_login_to_db(student_number, level, education):
           {"student_number": student_number, "level": level, "education": education}
       )
 
-def check_credentials(student_number, password):
-  with engine.connect() as conn:
-      result = conn.execute(
-          text("SELECT * FROM r_users WHERE student_number = :student_number AND password = :password"),
-          {"student_number": student_number, "password": password}
-      )
-      return result.fetchone() is not None
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
