@@ -18,18 +18,6 @@ from TFIDF_education import get_recommendations_edu_level_TFIDF
 #course
 from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
 
-#BOW
-#fav
-#from BOW_algorithmfav import get_recommendations_fav_BOW, get_recommendations_with_ratings_BOW
-
-#int
-#from BOW_algorithminterests import get_course_recommendations_int_BOW, get_recommendations_with_ratings_BOW, get_recommendations_level_BOW
-
-#edu
-#from BOW_education import recs_on_education_BOW, get_recommendations_edu_with_ratings_BOW 
-
-#course 
-#from BOW_algorithmcourse import get_recommendations_course_BOW
 
 
 app = Flask(__name__)

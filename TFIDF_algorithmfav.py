@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 
-# Rest of your code remains the same
+
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
 engine = create_engine(
@@ -41,7 +41,7 @@ course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_n
 course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_title', 'degree'])
 
 course_contents = [row[0] for row in course_contents]
-# Close the session
+
 session.close()
 
 # item-matrix
@@ -52,16 +52,16 @@ course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
 
 def get_recommendations_fav_TFIDF(student_number):
 
-  # Define the SQLAlchemy model for r_views
+ 
   Base = declarative_base()
   
   class Rfavo(Base):
-      __tablename__ = 'r_favorites4'  # Replace with your actual table name
+      __tablename__ = 'r_favorites4'  
   
       student_number = Column(String, primary_key=True)
       course_code = Column(String, primary_key=True)
-      rating = Column(String)  # Add the rating column to your model
-      id = Column(Integer)  # Assuming the 'id' column exists in the table
+      rating = Column(String)  
+      id = Column(Integer)  
   
   Session = sessionmaker(bind=engine)
   session = Session()
@@ -127,7 +127,7 @@ def get_ratings_from_database(student_number):
       query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
       result = conn.execute(query, {"student_number": student_number})
 
-      # Create a dictionary to store the ratings for each course
+      
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
@@ -136,18 +136,16 @@ def get_ratings_from_database(student_number):
 
 
 def get_recommendations_fav_with_ratings_TFIDF(student_number):
-  recommendations = get_recommendations_fav_TFIDF(student_number)  # Retrieve recommended courses as before
-  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
+  recommendations = get_recommendations_fav_TFIDF(student_number)  
+  rated_courses = get_ratings_from_database(student_number) 
 
   for recommendation_set in recommendations:
       for recommendation in recommendation_set['recommended_courses']:
-          course_code = recommendation['course_code']  # Access 'course_code' within the nested structure
-          # Check if there is a rating for the current course in the rated_courses list
+          course_code = recommendation['course_code']  
           if course_code in rated_courses:
               recommendation['liked'] = rated_courses[course_code]
-              #print(f"Course {course_code} is marked as {rated_courses[course_code]}")
+              
           else:
-              # If no rating found, assume 'off'
               recommendation['liked'] = 'off'
 
 

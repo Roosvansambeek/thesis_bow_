@@ -48,12 +48,12 @@ course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'c
 # Create indices
 indices = pd.Series(course_contents_df.index, index=course_contents_df['course_code']).drop_duplicates()
 
-# Now you can access indices using course code
+
 course_contents = [row[0] for row in course_contents]
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
 course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
 
-# Close the session
+
 session.close()
 
 def get_course_recommendations_int_TFIDF(student_number):
@@ -61,7 +61,7 @@ def get_course_recommendations_int_TFIDF(student_number):
   Base = declarative_base()
   
   class Cint(Base):
-      __tablename__ = 'r_users'  # Replace with your actual table name
+      __tablename__ = 'r_users'  
   
       student_number = Column(String, primary_key=True)
       management = Column(String)
@@ -92,7 +92,7 @@ def get_course_recommendations_int_TFIDF(student_number):
   Session = sessionmaker(bind=engine)
   session = Session()
   
-  # Assuming you have your tfidf_matrix and course_content_matrix defined
+  
   
   # Fetch data from the r_users table
   course_interests = session.query(Cint.student_number, Cint.management, Cint.data, Cint.law, Cint.businesses, Cint.psychology, Cint.economics, Cint.statistics, Cint.finance, Cint.philosophy, Cint.sociology, Cint.entrepreneurship, Cint.marketing, Cint.accounting, Cint.econometrics, Cint.media, Cint.ethics, Cint.programming, Cint.health, Cint.society, Cint.technology, Cint.communication, Cint.history, Cint.culture, Cint.language).all()
@@ -110,7 +110,6 @@ def get_course_recommendations_int_TFIDF(student_number):
 
   user_interest_vector = None
 
-  # Find the user_interest_vector for the specified student_number
   for user_interest in user_interests_list:
     interests = user_interest['user_interests']
 
@@ -142,7 +141,7 @@ def get_course_recommendations_int_TFIDF(student_number):
     }
 
 
-    # Display or use the recommended courses
+   
   return student_recommendations
 
 
@@ -152,7 +151,7 @@ def get_ratings_from_database(student_number):
       query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
       result = conn.execute(query, {"student_number": student_number})
 
-      # Create a dictionary to store the ratings for each course
+     
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
@@ -163,7 +162,7 @@ def get_degree_from_database(student_number):
       query = text("SELECT level FROM r_users WHERE student_number = :student_number")
       result = conn.execute(query, {"student_number": student_number})
 
-      # Create a list to store the levels for the student
+      
       levels = [row.level for row in result]
 
   return levels

@@ -44,7 +44,7 @@ indices = pd.Series(course_contents_df.index, index=course_contents_df['course_c
 
 
 
-# Close the session
+
 session.close()
 
 course_contents = [row[0] for row in course_contents]
@@ -55,7 +55,7 @@ def recs_on_education_TFIDF(student_number):
   Base = declarative_base()
 
   class Cedu(Base):
-      __tablename__ = 'r_users'  # Replace with your actual table name
+      __tablename__ = 'r_users' 
 
       student_number = Column(String, primary_key=True)
       education = Column(String, primary_key=True)
@@ -83,7 +83,7 @@ def recs_on_education_TFIDF(student_number):
       if user['student_number'] == student_number:
           education_value = user['education']['user_education']
           education_terms = education_value.lower().split()
-          # Update the dictionary with terms from the user's education
+          
           for term in education_terms:
               education_dict[term] = 1
           break  
@@ -120,7 +120,7 @@ def recs_on_education_TFIDF(student_number):
   }
 
 
-    # Display or use the recommended courses
+    
   return student_recommendations
 
     
@@ -130,7 +130,7 @@ def get_ratings_from_database(student_number):
       query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
       result = conn.execute(query, {"student_number": student_number})
 
-      # Create a dictionary to store the ratings for each course
+     
       ratings = {row.course_code: row.rating for row in result}
   return ratings
 
@@ -146,9 +146,8 @@ def get_degree_from_database(student_number):
 
 
 def get_recommendations_edu_with_ratings_TFIDF(student_number):
-  recommendations = recs_on_education_TFIDF(student_number)  # Retrieve recommended courses as before
-  rated_courses = get_ratings_from_database(student_number)  # Retrieve the ratings from the database
-  #print(rated_courses)
+  recommendations = recs_on_education_TFIDF(student_number)  
+  rated_courses = get_ratings_from_database(student_number)  
 
   for recommendation_set in recommendations['recommended_courses']:
     course_code = recommendation_set['course_code']  
