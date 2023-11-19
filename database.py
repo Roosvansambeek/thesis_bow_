@@ -280,7 +280,12 @@ def search_courses_from_db(query):
       return courses
 
 
+def mail_participants():
+  with engine.connect() as conn:
+      result = conn.execute(
+          text("SELECT email_address FROM r_participants")
+      ).fetchall()
+  return result
 
-
-
+emails = mail_participants()
 

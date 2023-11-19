@@ -29,6 +29,10 @@ def landing():
 
 app.secret_key = 'session_key'
 
+@app.route("/participate", methods =["GET", "POST"])
+def participate():
+  return render_template('participate.html')
+
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
     if request.method == 'POST':

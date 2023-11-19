@@ -1,45 +1,52 @@
 <div class="container">
     <div class="row">
         <div id="carouselExampleCaptions" class="carousel slide col-12">
-              <div id="carousel_random" class="carousel slide col-12">
+            <div id="carousel_random" class="carousel slide col-12">
                 <div class="carousel-indicators">
-                  {% for edu_rec in education_recommendations['recommended_courses']%}
-                    <button type="button" data-bs-target="#carousel_random" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{loop.index + 1 }}"></button>
-                  {% endfor %}
-            </div>
-            <div class="carousel-inner">
-              {% for edu_rec in education_recommendations['recommended_courses'] %}
-                <div class="carousel-item {% if loop.first %}active{% endif %}">
-                    <a href="/course/{{ edu_rec['course_code'] }}/{{ session['student_number']}}" class="card">
-
-                        <div class="carousel-card-body">
-                            <div class="course-header">
-                                <h5 class="card-title"><b>{{ edu_rec['course_title'] }}</b></h5>
-                                
-                            </div>
-                            <p class="course-details">
-                                {% if edu_rec['course_content'] | length > 500 %}
-                                {{ edu_rec['course_content'][:500] }}...
-                                {% else %}
-                                {{ edu_rec['course_content'] }}
-                                {% endif %}
-                            </p>
-                          <div class="star-button">
-                              {% include 'star_education.html' %}
-                          </div>
-                        </div>
-                    </a>
+                    {% for i in range(education_recommendations['recommended_courses'] | length) %}
+                        <button type="button" data-bs-target="#carousel_random" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                <div class="carousel-inner">
+                    {% for i in range(0, education_recommendations['recommended_courses'] | length, 1) %}
+                        <div class="carousel-item{% if loop.first %} active{% endif %}">
+                            <div class="row">
+                                {% for edu_rec in education_recommendations['recommended_courses'][i:i+1] %}
+                                    <div class="col-4">
+                                        <a href="/course/{{ edu_rec['course_code'] }}/{{ session['student_number'] }}" class="card"  style="width: 1105px; height: 260px;">
+                                            <div class="carousel-card-body">
+                                                <div class="course-header">
+                                                    <h5 class="card-title"><b>{{ edu_rec['course_title'] }}</b></h5>
+                                                </div>
+                                                <p class="course-details">
+                                                    {% if edu_rec['course_content'] | length > 500 %}
+                                                        {{ edu_rec['course_content'][:500] }}...
+                                                    {% else %}
+                                                        {{ edu_rec['course_content'] }}
+                                                    {% endif %}
+                                                </p>
+                                                <div class="star-button">
+                                                    {% include 'star_education.html' %}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel_random" data-bs-slide="prev">
-                <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
-                  <span class="visually-hidden">Previous</span>
+                    <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#carousel_random" data-bs-slide="next">
-                <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
-                  <span class="visually-hidden">Next</span>
+                    <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </div>
     </div>
 </div>
+
+
