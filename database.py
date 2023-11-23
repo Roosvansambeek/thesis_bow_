@@ -2,6 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 import os
+from datetime import datetime, timedelta
+import pytz
+from flask import session
+
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -14,6 +18,28 @@ engine = create_engine(
   }
 )
 
+
+def add_click_to_db(student_number, course_code, data):
+  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+  activity = data.get('activity')
+
+  with engine.connect() as conn:
+      # Fetch ID from r_courses based on the provided course_code
+      result = conn.execute(
+          text("SELECT id FROM r_courses WHERE course_code = :course_code"),
+          {"course_code": course_code}
+      )
+      row = result.fetchone()
+      if row:
+          id_course = row[0]
+
+          # Insert into r_sessions with both ID and other details
+          conn.execute(
+              text("INSERT INTO r_sessions (student_number, timestamp, course_code, activity, id_course) VALUES (:student_number, :time, :course_code, :activity, :id_course)"),
+              {"student_number": student_number, "time": time, "course_code": course_code, "activity": activity, "id_course": id_course}
+          )
+
+    
 
 def load_courses_from_db():
   with engine.connect() as conn:
@@ -79,23 +105,95 @@ def add_test_to_db(request, student_number, course_code, favorite_value):
 
 
 def load_favorite_courses_from_db(student_number):
-    with engine.connect() as conn:
-      query = text(""" 
-          SELECT rf.*, c.course_code, c.course_name, c.content
-          FROM r_courses c
-          LEFT JOIN r_favorites4 rf
-          ON c.course_code = rf.course_code AND rf.student_number =:student_number
-          WHERE rf.rating = 'on' 
+  #student_number = session.get('student_number')
+  
+  with engine.connect() as conn:
+      query = text("""
+          SELECT 
+              cr.course_name,
+              cr.course_code,
+              cr.language,
+              cr.aims,
+              cr.content,
+              cr.degree,
+              cr.ECTS,
+              cr.school,
+              cr.tests,
+              cr.block,
+              cr.lecturers
+          FROM r_courses cr
+          JOIN (
+              SELECT course_code,
+                  MAX(CASE WHEN activity = 'favorited' THEN timestamp END) AS favorited_time,
+                  MAX(CASE WHEN activity = 'unfavorited' THEN timestamp END) AS unfavorited_time
+              FROM r_sessions
+              WHERE student_number = :student_number
+              GROUP BY course_code
+              HAVING COALESCE(favorited_time, '1900-01-01 00:00:00') > COALESCE(unfavorited_time, '1900-01-01 00:00:00')
+              OR MAX(activity) = 'favorited'
+          ) s
+          ON cr.course_code = s.course_code;
       """)
-      
       result = conn.execute(query, {"student_number": student_number})
-      
+  
       favorite_courses = []
       columns = result.keys()
       for row in result:
           result_dict = {column: value for column, value in zip(columns, row)}
           favorite_courses.append(result_dict)
-      return favorite_courses
+  
+  return favorite_courses
+
+
+#student_number = 'rijs'
+#recommendations = load_favorite_courses_from_db(student_number)
+#print('reccsss:', recommendations)
+
+
+def load_last_viewed_courses_from_db(student_number):
+  with engine.connect() as conn:
+      # session_id = session.get('student_number')
+  
+      result = conn.execute(text("""
+          SELECT 
+              ci.course_name,
+              ci.course_code,
+              ci.language,
+              ci.aims,
+              ci.content,
+              ci.degree,
+              ci.ECTS,
+              ci.school,
+              ci.tests,
+              ci.block,
+              ci.lecturers
+          FROM r_courses ci
+          INNER JOIN (
+              SELECT 
+                  s.course_code, 
+                  s.student_number,
+                  MAX(s.timestamp) as latest_timestamp
+              FROM r_sessions s
+              WHERE s.student_number = :student_number
+              GROUP BY s.course_code, s.student_number
+          ) latest_session ON ci.course_code = latest_session.course_code
+          ORDER BY latest_session.latest_timestamp DESC;
+          """), {"student_number": student_number})
+  
+      compulsory_courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          compulsory_courses.append(result_dict)
+  
+  return compulsory_courses
+  
+
+
+
+
+
+
 
 def load_viewed_courses_from_db(student_number):
   with engine.connect() as conn:
@@ -115,41 +213,22 @@ def load_viewed_courses_from_db(student_number):
           viewed_courses.append(result_dict)
       return viewed_courses
 
-def load_ratings_and_details_for_viewed_courses(student_number):
-  with engine.connect() as conn:
-      query = text("""
-          SELECT r_views.course_code, r_favorites4.rating, r_courses.course_name, r_courses.content
-          FROM r_views
-          LEFT JOIN r_favorites4 ON r_views.student_number = r_favorites4.student_number
-                                  AND r_views.course_code = r_favorites4.course_code
-          INNER JOIN r_courses ON r_views.course_code = r_courses.course_code
-          WHERE r_views.student_number = :student_number
-      """)
-
-      result = conn.execute(query, {"student_number": student_number})
-
-      ratings_and_details_for_viewed_courses = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          ratings_and_details_for_viewed_courses.append(result_dict)
-      return ratings_and_details_for_viewed_courses
 
 
-def add_login_to_db(student_number, level, education):
+def add_login_to_db(student_number, education):
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO r_users (student_number, level, education) VALUES (:student_number, :level, :education)"),
-          {"student_number": student_number, "level": level, "education": education}
+          text("INSERT INTO r_users (student_number, education) VALUES (:student_number, :education)"),
+          {"student_number": student_number, "education": education}
       )
 
 
 def add_interests_to_db(data):
   with engine.connect() as conn:
-      query = text("INSERT INTO r_users (management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language) "
-                   "VALUES (:management, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language)")
+      query = text("INSERT INTO r_users (management, data, law, businesses, psychology, economics, statistics, finance, philosophy, sociology, entrepreneurship, marketing, accounting, econometrics, media, ethics, programming, health, society, technology, communication, history, culture, language, machine_learning, supply_chain, organizations, mathematics, sustainability, consumers, digital, governance, cognitive_science, artificial_intelligence, deep_learning, religion, globalization, behavior, theology, spirituality, criminality) "
+                   "VALUES (:management, :data, :law, :businesses, :psychology, :economics, :statistics, :finance, :philosophy, :sociology, :entrepreneurship, :marketing, :accounting, :econometrics, :media, :ethics, :programming, :health, :society, :technology, :communication, :history, :culture, :language, :machine_learning, :supply_chain, :organizations, :mathematics, :sustainability, :consumers, :digital, :governance, :cognitive_science, :artificial_intelligence, :deep_learning, :religion, :globalization, :behavior, :theology, :spirituality, :criminality)")
 
-     
+
       params = {
             'management': data.get('management'),
             'data':data.get('data'),
@@ -174,9 +253,27 @@ def add_interests_to_db(data):
             'communication': data.get('communication'),
             'history': data.get('history'),
             'culture': data.get('culture'),
-            'language': data.get('language')
+            'language': data.get('language'),
+            'machine_learning': data.get('machine_learning'),
+            'supply_chain': data.get('supply_chain'),
+            'organizations': data.get('organizations'),
+            'mathematics': data.get('mathematics'),
+            'sustainability': data.get('sustainability'),
+            'consumers': data.get('consumers'),
+            'digital': data.get('digital'),
+            'governance': data.get('governance'),
+            'cognitive_science': data.get('cognitive_science'),
+            'artificial_intelligence': data.get('artificial_intelligence'),
+            'deep_learning': data.get('deep_learning'),
+            'religion': data.get('religion'),
+            'globalization': data.get('globalization'),
+            'behavior': data.get('behavior'),
+            'theology': data.get('theology'),
+            'spirituality': data.get('spirituality'),
+            'criminality': data.get('criminality')
+
         }
-      
+
 
       conn.execute(query, params)
 
@@ -208,8 +305,25 @@ def update_interests(student_number, data):
           "communication = :communication, "
           "history = :history, "
           "culture = :culture, "
-          "language = :language "
-              "WHERE student_number = :student_number "
+          "language = :language, "
+          "machine_learning = :machine_learning, "
+          "supply_chain = :supply_chain, "
+          "organizations = :organizations,"
+          "mathematics = :mathematics, "
+          "sustainability = :sustainability, "
+          "consumers = :consumers, "
+          "digital = :digital, "
+          "governance = :governance, "
+          "cognitive_science = :cognitive_science, "
+          "artificial_intelligence = :artificial_intelligence, "
+          "deep_learning = :deep_learning, "
+          "religion = :religion, "
+          "globalization = :globalization, "
+          "behavior = :behavior, "
+          "theology = :theology, "
+          "spirituality = :spirituality, "
+          "criminality = :criminality "
+          "WHERE student_number = :student_number "
           )
 
       params = {
@@ -237,11 +351,28 @@ def update_interests(student_number, data):
           'history': data.get('history'),
           'culture': data.get('culture'),
           'language': data.get('language'),
+          'machine_learning': data.get('machine_learning'),
+          'supply_chain': data.get('supply_chain'),
+          'organizations': data.get('organizations'),
+          'mathematics': data.get('mathematics'),
+          'sustainability': data.get('sustainability'),
+          'consumers': data.get('consumers'),
+          'digital': data.get('digital'),
+          'governance': data.get('governance'),
+          'cognitive_science': data.get('cognitive_science'),
+          'artificial_intelligence': data.get('artificial_intelligence'),
+          'deep_learning': data.get('deep_learning'),
+          'religion': data.get('religion'),
+          'globalization': data.get('globalization'),
+          'behavior': data.get('behavior'),
+          'theology': data.get('theology'),
+          'spirituality': data.get('spirituality'),
+          'criminality': data.get('criminality'),
           'student_number': student_number
       }
 
       conn.execute(query, params)
-    
+
 def add_views_to_db(student_number, course_code, timestamp, id):
   with engine.connect() as conn:
      

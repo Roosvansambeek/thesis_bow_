@@ -13,6 +13,7 @@ scikit-learn = "^1.3.2"
 algorithm = "^1.2.0"
 consultor = "^0.2.0"
 pandas = "^2.1.2"
+pytz = "^2023.3.post1"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md

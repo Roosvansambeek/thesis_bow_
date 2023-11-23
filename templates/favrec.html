@@ -16,27 +16,11 @@
                     {% for i in range(0, student_recommendation['recommended_courses']|length, 3) %}
                         <div class="carousel-item{% if loop.first %} active{% endif %}">
                             <div class="row">
-                                {% for recommended_course in student_recommendation['recommended_courses'][i:i+3] %}
+                                {% for course in student_recommendation['recommended_courses'][i:i+3] %}
                                     <div class="col-4">
-                                        <!-- Your content for each recommended course goes here -->
-                                        <a href="/course/{{ recommended_course['course_code'] }}/{{ student_recommendation['student_number'] }}" class="card" style="width: 330px; height: 260px;">
-                                            <div class="card-body">
-                                                <div class="course-header">
-                                                    <h5 class="card-title"><b>{{ recommended_course['course_name'] }}</b></h5> 
-                                                </div> 
-                                                <p class="course-details">
-                                                    {% if recommended_course['course_content'] | length > 200 %}
-                                                        {{ recommended_course['course_content'][:200] }}...
-                                                    {% else %}
-                                                        {{ recommended_course['course_content'] }}
-                                                    {% endif %}
-                                                </p>
-                                                <div class="star-button" style="position: absolute; bottom: 0; right: 0; margin: 10px;">
-                                                    {% include 'star_explore.html' %}
-                                                </div>
-                                            </div>   
-                                        </a>
-                                    </div>
+                                      {% include 'courseitemcar.html' %}
+                                      {% include 'star.html' %}
+                                    </div>    
                                 {% endfor %}
                             </div>
                         </div>

@@ -30,19 +30,25 @@ class Cinfo(Base):
   course_code = Column(String, primary_key=True)
   course_name = Column(String, primary_key=True)
   degree= Column(String, primary_key=True)
+  language= Column(String, primary_key=True)
+  aims= Column(String, primary_key=True)
+  content = Column(String, primary_key=True)
+  ECTS = Column(String, primary_key=True)
+  school = Column(String, primary_key=True)
+  tests = Column(String, primary_key=True)
+  block = Column(String, primary_key=True)
+  lecturers = Column(String, primary_key=True)
 
 Session = sessionmaker(bind=engine)
 session = Session() 
 
 # Fetch data from the r_views table
-course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_name, Cinfo.degree).all()
+course_contents = session.query(Cinfo.content, Cinfo.course_code, Cinfo.course_name, Cinfo.degree, Cinfo.language, Cinfo.aims, Cinfo.content, Cinfo.ECTS, Cinfo.school, Cinfo.tests, Cinfo.block, Cinfo.lecturers).all()
 
-course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_title', 'degree'])
+course_contents_df = pd.DataFrame(course_contents, columns=['course_content', 'course_code', 'course_name', 'degree', 'language', 'aims', 'content', 'ECTS', 'school', 'tests', 'block', 'lecturers'])
 
 # Create indices
 indices = pd.Series(course_contents_df.index, index=course_contents_df['course_code']).drop_duplicates()
-
-
 
 
 session.close()
@@ -109,11 +115,18 @@ def recs_on_education_TFIDF(student_number):
       "student_number": student_number,
       "recommended_courses": [
           {
+              "course_name": course["course_name"],
               "course_code": course["course_code"],
-              "course_content": course["course_content"],
-              "course_title": course["course_title"],
-              "degree": course["degree"],
-              "similarity_score": similarities[0, index]
+              "language":course["language"],
+              "aims": course["aims"],
+              "content": course["content"],
+              "Degree": course["degree"],
+              "ECTS": course['ECTS'],
+              "school": course['school'],
+              "tests": course['tests'],
+              "block": course['block'],
+              "lecturers": course['lecturers']
+              #"similarity_score": similarities[0, index]
           }
           for index, course in recommended_courses.iterrows()
       ]
@@ -122,65 +135,6 @@ def recs_on_education_TFIDF(student_number):
 
     
   return student_recommendations
-
-    
-
-def get_ratings_from_database(student_number):
-  with engine.connect() as conn:
-      query = text("SELECT course_code, rating FROM r_favorites4 WHERE student_number = :student_number")
-      result = conn.execute(query, {"student_number": student_number})
-
-     
-      ratings = {row.course_code: row.rating for row in result}
-  return ratings
-
-
-def get_degree_from_database(student_number):
-  with engine.connect() as conn:
-      query = text("SELECT level FROM r_users WHERE student_number = :student_number")
-      result = conn.execute(query, {"student_number": student_number})
-  
-      levels = [row.level for row in result]
-  
-  return levels
-
-
-def get_recommendations_edu_with_ratings_TFIDF(student_number):
-  recommendations = recs_on_education_TFIDF(student_number)  
-  rated_courses = get_ratings_from_database(student_number)  
-
-  for recommendation_set in recommendations['recommended_courses']:
-    course_code = recommendation_set['course_code']  
-    if course_code in rated_courses:
-        recommendation_set['rating'] = rated_courses[course_code]
-        
-    else:
-              
-      recommendation_set['rating'] = 'off'
-
-
-  return recommendations
-
-
-def get_recommendations_edu_level_TFIDF(student_number):
-  recommendations = get_recommendations_edu_with_ratings_TFIDF(student_number)
-  degree = get_degree_from_database(student_number)
-
-
-  student_degree = degree[0] if degree else None
-
-  if student_degree:
-
-      filtered_recommendations = {
-          "student_number": student_number,
-          "recommended_courses": [
-              recommendation_set for recommendation_set in recommendations['recommended_courses']
-              if recommendation_set['degree'].lower() == student_degree.lower()
-          ]
-      }
-      return filtered_recommendations
-  else:
-      return {"student_number": student_number, "recommended_courses": []}
 
 
 

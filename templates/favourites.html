@@ -144,26 +144,23 @@
     <div class="col-6 left">
       <h3><b>Your <span style="color: #ACBED8;">Saved Courses!</span></b></h3>
     </div>
-    <div class="col-6 right">
-      <a href="mailto:?subject=My favourite subjects from Tilburg University"><i class="fa-solid fa-envelope fa-xl" title="E-mail favorites" style="color: #000000;"></i></a>
-    </div>
   </div>
   <div class="row">
     {% if not favorite_courses %}
     <p class="message">You have not favorited any courses yet.<br> Click on the stars of courses to add them to your favorites!</p>
     {% else %}
-      {% for favorite_course in favorite_courses %}
+      {% for course in favorite_courses %}
             <div class="col-12">
-              <a href="/course/{{favorite_course['course_code']}}/{{'student_number'}}" target="_blank" class="card">
+              <a href="/course/{{course['course_code']}}/{{'student_number'}}" target="_blank" class="card">
                 <div class="card-body">
                   <div class="course-header">
-                    <h5 class="card-title"><b>{{ favorite_course['course_name'] }}</b></h5>{% include 'star_favorite.html' %}
+                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>{% include 'star.html' %}
                   </div>
                     <p class="course-details">
-                      {% if favorite_course['content'] | length > 250 %}
-                        {{ favorite_course['content'][:250] }}...
+                      {% if course['content'] | length > 250 %}
+                        {{ course['content'][:250] }}...
                       {% else %}
-                        {{ favorite_course['content'] }}
+                        {{ course['content'] }}
                       {% endif %}
                     </p>
                 </div>

@@ -1,8 +1,0 @@
-<form action='/home/{{ student_number }}' method="post">
-    <label>
-        <input type="checkbox" name="rating" {% if edu_rec['rating'] == 'on' %} checked {% endif %}>
-        <input type="hidden" name="course_code" value="{{ edu_rec['course_code'] }}">
-    </label>
-    <input type="submit" value="Save" style="background-color: #ACBED8; color: white;  padding: 3px 5px; border-radius: 10px; border: 2px solid #FFF;">
-</form>
-
