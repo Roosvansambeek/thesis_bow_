@@ -1,4 +1,4 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
@@ -20,9 +20,9 @@ engine = create_engine(
   }
 )
 
-tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+count_vectorizer = CountVectorizer(stop_words='english')
 
-def get_recommendations_course_TFIDF(course_code):
+def get_recommendations_course_BOW(course_code):
     Base = declarative_base()
     class Cinfo(Base):
       __tablename__ = 'r_courses' 
@@ -54,7 +54,7 @@ def get_recommendations_course_TFIDF(course_code):
     
     course_contents = [row[0] for row in course_contents]
     
-    course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+    course_content_matrix = count_vectorizer.fit_transform(course_contents)
     
     session.close()
     

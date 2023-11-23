@@ -1,4 +1,4 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
@@ -55,13 +55,13 @@ indices = pd.Series(course_contents_df.index, index=course_contents_df['course_c
 
 
 course_contents = [row[0] for row in course_contents]
-tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+count_vectorizer = CountVectorizer(stop_words='english')
+course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
 
 session.close()
 
-def get_course_recommendations_int_TFIDF(student_number):
+def get_course_recommendations_int_BOW(student_number):
 
   Base = declarative_base()
   
@@ -133,7 +133,7 @@ def get_course_recommendations_int_TFIDF(student_number):
     interests = user_interest['user_interests']
 
     
-    user_interest_vector = [interests.get(interest, 0) for interest in tfidf_vectorizer.get_feature_names_out()]
+    user_interest_vector = [interests.get(interest, 0) for interest in count_vectorizer.get_feature_names_out()]
 
 
     similarities = cosine_similarity([user_interest_vector], course_content_matrix)

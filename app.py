@@ -6,18 +6,18 @@ import httpagentparser
 
 
 
-#TFIDF
+#BOW
 #fav
-from TFIDF_algorithmfav import get_recommendations_fav_TFIDF
+from BOW_algorithmfav import get_recommendations_fav_BOW
 
 #int
-from TFIDF_algorithminterests import get_course_recommendations_int_TFIDF
+from BOW_algorithminterests import get_course_recommendations_int_BOW
 
 #edu
-from TFIDF_education import recs_on_education_TFIDF
+from BOW_education import recs_on_education_BOW
 
 #course
-from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
+from BOW_algorithmcourse import get_recommendations_course_BOW
 
 
 
@@ -77,10 +77,10 @@ def home(student_number):
    
     student_number = student_number or session.get('student_number', default_value)
     
-    education_recommendations = recs_on_education_TFIDF(student_number)
+    education_recommendations = recs_on_education_BOW(student_number)
     num_education_recommendations=len(education_recommendations)
-    fav_recommendations = get_recommendations_fav_TFIDF(student_number)
-    interests_recommendations = get_course_recommendations_int_TFIDF(student_number)
+    fav_recommendations = get_recommendations_fav_BOW(student_number)
+    interests_recommendations = get_course_recommendations_int_BOW(student_number)
     viewed_courses=load_last_viewed_courses_from_db(student_number)
 
     favorite_courses=load_favorite_courses_from_db(student_number)
@@ -93,9 +93,9 @@ def home(student_number):
 
         favorite_courses=load_favorite_courses_from_db(student_number)
 
-        fav_recommendations = get_recommendations_fav_TFIDF(student_number)
+        fav_recommendations = get_recommendations_fav_BOW(student_number)
 
-        #interests_recommendations = get_course_recommendations_int_TFIDF(student_number)
+        #interests_recommendations = get_course_recommendations_int_BOW(student_number)
         viewed_courses=load_ratings_and_details_for_viewed_courses(student_number)
 
 
@@ -151,7 +151,7 @@ def show_course(student_number, course_code):
     
     viewed_courses=load_last_viewed_courses_from_db(student_number)
     course_code = request.view_args['course_code']
-    recommendations_courses = get_recommendations_course_TFIDF(course_code)
+    recommendations_courses = get_recommendations_course_BOW(course_code)
     course = [course for course in courses if course.get('course_code') == course_code]
 
     

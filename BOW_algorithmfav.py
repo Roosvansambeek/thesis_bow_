@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import os
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, String, Integer
 import numpy as np
@@ -54,11 +54,11 @@ session.close()
 
 # item-matrix
 
-tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+count_vectorizer = CountVectorizer(stop_words='english')
+course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
 
-def get_recommendations_fav_TFIDF(student_number):
+def get_recommendations_fav_BOW(student_number):
 
   Base = declarative_base()
   

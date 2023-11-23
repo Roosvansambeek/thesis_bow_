@@ -3,11 +3,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
 from sqlalchemy import create_engine, Column, String, text, column, String
-from sklearn.feature_extraction.text import TfidfVectorizer  
-from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer 
+
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -54,10 +53,10 @@ indices = pd.Series(course_contents_df.index, index=course_contents_df['course_c
 session.close()
 
 course_contents = [row[0] for row in course_contents]
-tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-course_content_matrix = tfidf_vectorizer.fit_transform(course_contents)
+count_vectorizer = CountVectorizer(stop_words='english')
+course_content_matrix = count_vectorizer.fit_transform(course_contents)
 
-def recs_on_education_TFIDF(student_number):
+def recs_on_education_BOW(student_number):
   Base = declarative_base()
 
   class Cedu(Base):
@@ -98,7 +97,7 @@ def recs_on_education_TFIDF(student_number):
 
   
 
-  user_education_vector = [education_dict.get(edu, 0) for edu in tfidf_vectorizer.get_feature_names_out()]
+  user_education_vector = [education_dict.get(edu, 0) for edu in count_vectorizer.get_feature_names_out()]
   
 
   similarities = cosine_similarity([user_education_vector], course_content_matrix)

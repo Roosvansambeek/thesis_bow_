@@ -10,3 +10,6 @@ channel = "stable-23_05"
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
 deploymentTarget = "cloudrun"
+
+[unitTest]
+language = "python3"
