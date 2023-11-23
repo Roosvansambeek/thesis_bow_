@@ -112,6 +112,24 @@
       </div>
     </div>
   </div>
+  <script>
+// Get the URL parameters
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  // Get the value of the 'username' parameter from the URL
+  const usernameParam = urlParams.get('username');
+
+  // Check if the 'username' parameter exists and is not empty
+  if (usernameParam && usernameParam.trim() !== '') {
+      // Find the input field by its name and set its value to the 'username' parameter
+      const studentNumberField = document.querySelector('input[name="student_number"]');
+      if (studentNumberField) {
+          studentNumberField.value = usernameParam;
+      }
+  }
+    </script>
+
 </body>
 </html>  
 
