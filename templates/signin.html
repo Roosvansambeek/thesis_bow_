@@ -67,6 +67,7 @@
     </style>
   </head>
 <body>
+  
    <!-- Left Column -->
   <div class="col-md-6">
     <h1><b>Sign In </b></h1>
@@ -84,7 +85,7 @@
             <form action="/signin" method="post">
 
               <div class="form-group">
-                <label for="exampleInputEmail1">Student Number: *</label>
+                <label for="exampleInputEmail1">Student Number: </label> 
                 <input type="text" name="student_number" class="form-control rounded-textbox" placeholder="do_22_ni">
 
 <br><br>
@@ -94,7 +95,7 @@
 
               
               <div class="form-group">
-                <label for="education">Current Education: *</label>
+                <label for="education">Current Education: </label>
                 <input type="education" name="education" class="form-control rounded-textbox" placeholder="E.g.: Psychology">
 
               </div><br><br>
@@ -113,16 +114,15 @@
     </div>
   </div>
   <script>
-// Get the URL parameters
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  // Get the value of the 'username' parameter from the URL
+  
   const usernameParam = urlParams.get('username');
 
-  // Check if the 'username' parameter exists and is not empty
+  
   if (usernameParam && usernameParam.trim() !== '') {
-      // Find the input field by its name and set its value to the 'username' parameter
+ 
       const studentNumberField = document.querySelector('input[name="student_number"]');
       if (studentNumberField) {
           studentNumberField.value = usernameParam;

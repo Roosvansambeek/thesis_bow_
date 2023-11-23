@@ -113,7 +113,7 @@ def get_recommendations_fav_TFIDF(student_number):
                 "language": session.query(Cinfo.language).filter(Cinfo.content == course_contents[course_index]).first()[0],
                 "aims": session.query(Cinfo.aims).filter(Cinfo.content == course_contents[course_index]).first()[0],
                 "content": session.query(Cinfo.content).filter(Cinfo.content == course_contents[course_index]).first()[0],
-                "Degree": session.query(Cinfo.degree).filter(Cinfo.content == course_contents[course_index]).first()[0],
+                "degree": session.query(Cinfo.degree).filter(Cinfo.content == course_contents[course_index]).first()[0],
                 "ECTS": session.query(Cinfo.ECTS).filter(Cinfo.content == course_contents[course_index]).first()[0],
                 "school": session.query(Cinfo.school).filter(Cinfo.content == course_contents[course_index]).first()[0],
                 "tests": session.query(Cinfo.tests).filter(Cinfo.content == course_contents[course_index]).first()[0],

@@ -52,58 +52,6 @@ def load_courses_from_db():
     return courses
 
 
-def load_carousel_courses_from_db(student_number):
-  with engine.connect() as conn:
-      query = text("""
-          SELECT c.*, rf.rating 
-          FROM r_courses c
-          LEFT JOIN r_favorites4 rf
-          ON c.course_code = rf.course_code AND rf.student_number = :student_number
-      """)
-
-      result = conn.execute(query, {"student_number": student_number})
-
-      carousel_courses = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          carousel_courses.append(result_dict)
-
-      return carousel_courses
-
-
-
-
-
-
-
-def add_test_to_db(request, student_number, course_code, favorite_value):
-  with engine.connect() as conn:
-      existing_record = conn.execute(
-          text("SELECT * FROM r_favorites4 WHERE course_code = :course_code AND student_number = :student_number"),
-          {"course_code": course_code, "student_number": student_number}
-      ).fetchone()
-
-      course_info_id = conn.execute(
-          text("SELECT id FROM r_courses WHERE course_code = :course_code"),
-          {"course_code": course_code}
-      ).fetchone()
-
-      if course_info_id:
-          course_info_id = course_info_id[0]
-      else:
-          course_info_id = None
-
-      print(f"Retrieved id for course_code={course_code}: id={course_info_id}")
-
-      if existing_record:
-          query = text("UPDATE r_favorites4 SET rating = :rating, id = :id WHERE course_code = :course_code AND student_number = :student_number")
-      else:
-          query = text("INSERT INTO r_favorites4 (course_code, student_number, rating, id) VALUES (:course_code, :student_number, :rating, :id)")
-
-      conn.execute(query, {"course_code": course_code, "student_number": student_number, "rating": favorite_value, "id": course_info_id})
-
-
 def load_favorite_courses_from_db(student_number):
   #student_number = session.get('student_number')
   
@@ -145,10 +93,6 @@ def load_favorite_courses_from_db(student_number):
   return favorite_courses
 
 
-#student_number = 'rijs'
-#recommendations = load_favorite_courses_from_db(student_number)
-#print('reccsss:', recommendations)
-
 
 def load_last_viewed_courses_from_db(student_number):
   with engine.connect() as conn:
@@ -187,32 +131,6 @@ def load_last_viewed_courses_from_db(student_number):
           compulsory_courses.append(result_dict)
   
   return compulsory_courses
-  
-
-
-
-
-
-
-
-def load_viewed_courses_from_db(student_number):
-  with engine.connect() as conn:
-      query = text("""
-          SELECT r_courses.course_code, r_courses.course_name, r_courses.content
-          FROM r_views
-          INNER JOIN r_courses ON r_views.course_code = r_courses.course_code
-          WHERE r_views.student_number = :student_number
-      """)
-
-      result = conn.execute(query, {"student_number": student_number})
-
-      viewed_courses = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          viewed_courses.append(result_dict)
-      return viewed_courses
-
 
 
 def add_login_to_db(student_number, education):

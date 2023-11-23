@@ -154,7 +154,7 @@ def get_course_recommendations_int_TFIDF(student_number):
               "language":course["language"],
               "aims": course["aims"],
               "content": course["content"],
-              "Degree": course["degree"],
+              "degree": course["degree"],
               "ECTS": course['ECTS'],
               "school": course['school'],
               "tests": course['tests'],

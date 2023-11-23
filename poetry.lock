@@ -212,6 +212,16 @@ docs = ["Sphinx", "docutils (<0.18)"]
 test = ["objgraph", "psutil"]
 
 [[package]]
+name = "httpagentparser"
+version = "1.9.5"
+description = "Extracts OS Browser etc information from http user agent string"
+optional = false
+python-versions = "*"
+files = [
+    {file = "httpagentparser-1.9.5.tar.gz", hash = "sha256:53cefd9d65990f6fe59c0378cad8ea1b9df8f770d2e8bd9d8762edae033be80a"},
+]
+
+[[package]]
 name = "itsdangerous"
 version = "2.1.2"
 description = "Safely pass data to untrusted environments and back."
@@ -801,4 +811,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10.0,<3.11"
-content-hash = "0a05d89ac2f1e1f6830cd87421ddfcbc2c986eaf360d26b418d197353ec18a68"
+content-hash = "be0114235d821b42a6f88504c5e32c6e189ed07849b7abe1bde1c660f8fc90f4"

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
-from database import load_courses_from_db, load_carousel_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, update_interests, add_views_to_db, add_test_to_db,  load_viewed_courses_from_db, search_courses_from_db, add_click_to_db, load_last_viewed_courses_from_db
+from database import load_courses_from_db, load_favorite_courses_from_db, add_interests_to_db , add_login_to_db, update_interests, add_views_to_db,  search_courses_from_db, add_click_to_db, load_last_viewed_courses_from_db
 from flask import request, redirect, url_for, flash
 from datetime import datetime
+import httpagentparser
 
 
 
@@ -23,11 +24,18 @@ from TFIDF_algorithmcourse import get_recommendations_course_TFIDF
 app = Flask(__name__)
 
 
+app.secret_key = 'session_key'
+
 @app.route("/")
 def landing():
+    user_agent = request.headers.get('User-Agent')
+    device = httpagentparser.detect(user_agent)
+    print(f"User agent: {user_agent}")
+    print(f"Device: {device}")
+    if 'mobile' in user_agent.lower():
+        return render_template('mobile_error.html')
     return render_template('signin.html')
 
-app.secret_key = 'session_key'
 
 @app.route("/participate", methods =["GET", "POST"])
 def participate():
@@ -84,17 +92,10 @@ def home(student_number):
         course_code = request.form.get('course_code')
 
         favorite_courses=load_favorite_courses_from_db(student_number)
-        
-
-
-       
 
         fav_recommendations = get_recommendations_fav_TFIDF(student_number)
 
-        interests_recommendations = get_course_recommendations_int_TFIDF(student_number)
-
-        #education_recommendations = get_recommendations_edu_level_TFIDF(student_number)
-
+        #interests_recommendations = get_course_recommendations_int_TFIDF(student_number)
         viewed_courses=load_ratings_and_details_for_viewed_courses(student_number)
 
 
