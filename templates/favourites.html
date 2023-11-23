@@ -142,7 +142,7 @@
 <div class="container">
   <div class="row">
     <div class="col-6 left">
-      <h3><b>Your <span style="color: #ACBED8;">Saved Courses!</span></b></h3>
+      <h3><b>Your <span style="color: #ACBED8;">Favorite Courses!</span></b></h3>
     </div>
   </div>
   <div class="row">
@@ -151,7 +151,7 @@
     {% else %}
       {% for course in favorite_courses %}
             <div class="col-12">
-              <a href="/course/{{course['course_code']}}/{{'student_number'}}" target="_blank" class="card">
+              <a href="/course/{{course['course_code']}}/{{'student_number'}}" class="card">
                 <div class="card-body">
                   <div class="course-header">
                     <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>{% include 'star.html' %}

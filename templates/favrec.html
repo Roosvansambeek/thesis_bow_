@@ -1,6 +1,6 @@
 <div class="section">
   <div class="row">
-      <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your saved courses!</b></h3>
+      <h3><b><span style="color: #ACBED8;">Recommendations </span> based on your favorite courses!</b></h3>
         <div id="carousel_fav" class="carousel slide col-12">
             <div class="carousel-indicators">
                 {% if fav_recommendations %}
@@ -18,7 +18,7 @@
                             <div class="row">
                                 {% for course in student_recommendation['recommended_courses'][i:i+3] %}
                                     <div class="col-4">
-                                      {% include 'courseitemcar.html' %}
+                                      {% include 'courseitemshome.html' %}
                                       {% include 'star.html' %}
                                     </div>    
                                 {% endfor %}

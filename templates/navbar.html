@@ -49,6 +49,15 @@
     i {
       margin-right: 5px;
     }
+
+
+    reminder-text {
+        color: red;
+        font-weight: bold;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+    }
 </style>
 
 <!-- Fixed navbar -->
@@ -66,7 +75,7 @@
                   <a class="custom-text" href="/home/{{student_number}}"><i class="fa-solid fa-house" style="color: #000000;"></i><b>Home</b></a>
               </li>
               <li class="nav-item">
-                  <a class="custom-text" href="/favourites/{{student_number}}"><i class="fa-solid fa-save" style="color: #000000;"></i><b>Saved</b></a>
+                  <a class="custom-text" href="/favourites/{{student_number}}"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favorites</b></a>
               </li>
           </ul>
         <form class="d-flex" role="search" action="/search" method="get">
@@ -86,4 +95,18 @@
 <div style="height:50px"></div>
 
 
+
+<!-- Your existing HTML code remains the same -->
+
+<script>
+    setTimeout(function() {
+        var reminderMessage = document.createElement("div");
+        var reminderText = document.createElement("p");
+        reminderText.textContent = "Don't forget to return to the questionnaire!";
+        reminderText.style.color = "red";
+        reminderText.style.fontWeight = "bold";
+        reminderMessage.appendChild(reminderText);
+        document.querySelector('.left').appendChild(reminderMessage);
+    }, 10000);
+</script>
 

@@ -153,7 +153,7 @@ def show_course(student_number, course_code):
     recommendations_courses = get_recommendations_course_TFIDF(course_code)
     course = [course for course in courses if course.get('course_code') == course_code]
 
-    print('courseee:', course)
+    
 
     if not course:
         return "Not Found", 404
