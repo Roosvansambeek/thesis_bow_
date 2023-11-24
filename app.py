@@ -3,6 +3,7 @@ from database import load_courses_from_db, load_favorite_courses_from_db, add_in
 from flask import request, redirect, url_for, flash
 from datetime import datetime
 import httpagentparser
+from email_part import store_email_in_db, check_and_send_email, load_adres_from_db
 
 
 
@@ -37,9 +38,22 @@ def landing():
     return render_template('signin.html')
 
 
-@app.route("/participate", methods =["GET", "POST"])
+@app.route("/participate", methods=["GET", "POST"])
 def participate():
-  return render_template('participate.html')
+    if request.method == "POST":
+        email = request.form['email']
+        print(email)
+        store_email_in_db(email)
+        load_adres_from_db()
+        check_and_send_email(email)
+
+        return redirect(url_for('participatesent'))  
+    return render_template('participate.html')
+
+@app.route("/participate/sent")
+def participatesent():
+    return render_template('participation2.html')
+
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
